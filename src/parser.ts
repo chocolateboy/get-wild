@@ -1,7 +1,6 @@
 // @ts-ignore
 const TOKEN: RegExp = codegen.require('../resources/build.js')
 
-const $JSON = JSON
 const ESCAPED = /\\(.)/g
 
 const parser = (path: string) => {
@@ -19,7 +18,7 @@ const parser = (path: string) => {
         } else if (name) {
             step = name
         } else { // invalid bracket or token
-            throw new SyntaxError(`Invalid step @ ${offset}: ${$JSON.stringify(path)}`)
+            throw new SyntaxError(`Invalid step @ ${offset}: ${JSON.stringify(path)}`)
         }
 
         steps.push(step)

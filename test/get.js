@@ -61,41 +61,6 @@ test('error', t => {
             }
         )
     }
-
-    const paths = [
-        ' ',
-        '[]',
-        '[[0]]',
-        '[[-1]]',
-        '[0',
-        '0]',
-        '[-1',
-        '-1]',
-        '[foo',
-        'foo]',
-        'foo[',
-        '[]foo',
-        'foo[]',
-        'foo[]bar',
-        'foo[bar]baz',
-        'foo.bar.baz[-1].[',
-        'foo[1]bar',
-        'foo["]bar',
-        'foo["\\"]bar',
-        "foo[']bar",
-        "foo['\\']bar",
-        ' foo [1] . bar ',
-    ]
-
-    for (const path of paths) {
-        t.throws(
-            () => get(NODE, path),
-            {
-                instanceOf: SyntaxError,
-                message: /\bInvalid step\b/,
-            }
-        )
-    }
 })
 
 test('scalar', t => {

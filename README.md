@@ -99,7 +99,7 @@ const obj = {
 get(obj, 'users.*.name')  // ["John Doe", "Jane Doe", "Nemo"]
 
 // also works with arrays
-get(array, '[1].*.value') // [4, 5, 6]
+get(array, '1.*.value') // [4, 5, 6]
 ```
 
 #### remove missing results (flatten)
@@ -221,11 +221,9 @@ If there are no steps in the path, the object itself is returned (or the
 default value if the object is undefined).
 
 Wildcard matching is performed by extracting an array of values at the
-wildcard's location and [`get`](#get)ting the remainder of the path from each
-value. Wildcards can be used at any locations in a path to turn a single lookup
-into an array of lookup results for values under that location. Paths can
-contain multiple wildcards, each one recursively applying the remainder of the
-path to the enumerable values underneath it.
+wildcard's location and recursively [`get`](#get)ting the remainder of the path
+from each value. Wildcards can be used at any locations in a path to turn a
+single lookup into an array of lookup results for values at that location.
 
 The values returned by wildcard matches can be customized. By default, `*`
 flattens the results (using [`flatMap`][flatMap]), while `**` uses
@@ -287,12 +285,12 @@ const get = getter({ parser: memoized })
 get(obj, '...')
 ```
 
-The default parser used to turn a path string into an array of steps (strings,
-symbols and numbers).
+The default parser used by [`get`](#get) to turn a path string into an array of
+steps (strings, symbols and numbers).
 
-The array of steps used inside the [`get`](#get) function is not mutated, so,
-e.g., the parser can be memoized (or steps can be pre-parsed) to avoid
-re-parsing long/frequently-used paths.
+The array of steps used inside the `get` function is not mutated, so, e.g., the
+parser can be memoized (or steps can be pre-parsed) to avoid re-parsing
+long/frequently-used paths.
 
 ### Syntax
 
@@ -360,7 +358,7 @@ If a custom parser is supplied, any token can be used:
 const parser = path => path.split('.')
 const get = getter({ flatMap: '[]', parser })
 
-get(obj, 'foo.[].baz') // [1, 2]
+get(obj, 'foo.[].bar') // [1, 2]
 ```
 
 ## map
@@ -434,6 +432,7 @@ The following NPM scripts are available:
 - [dot-wild-tiny](https://www.npmjs.com/package/dot-wild-tiny)
 - [just-safe-get](https://www.npmjs.com/package/just-safe-get)
 - [lodash.get](https://www.npmjs.com/package/lodash.get)
+- [object-path-wild](https://www.npmjs.com/package/object-path-wild)
 - [@gizt/selector](https://www.npmjs.com/package/@gizt/selector)
 
 # VERSION

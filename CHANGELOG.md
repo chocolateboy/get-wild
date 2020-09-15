@@ -1,3 +1,10 @@
+## 0.0.2 - TBD
+
+- parser:
+    - add missing backslash (\\) to the list of excluded name characters
+    - portability fix: replace lookbehind assertion (not supported on Safari)
+      with lookahead
+
 ## 0.0.1 - 2020-09-15
 
 - initial release
