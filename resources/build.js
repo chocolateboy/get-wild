@@ -5,9 +5,10 @@ const name           = / (?: (?: (?: ^ ) | (?: (?<= .) \. ) ) ( [^\s"'`\[\].]+ )
 const invalidToken   = / (.) /.source
 
 const $TOKEN = `(?: (?: \\[ (?: ${quoted} | ${integer} ) \\] ) | ${invalidBracket} | ${name} | ${invalidToken} )`
-
-const DEBUG = process.env.DEBUG?.trim()?.split(/\s+|\s*,\s*/) || []
 const TOKEN = new RegExp($TOKEN.replace(/\s+/g, ''), 'g').toString()
+
+const $DEBUG = process.env.DEBUG
+const DEBUG = $DEBUG ? $DEBUG.trim().split(/\s+|\s*,\s*/) : []
 
 if (DEBUG.includes('get-wild')) {
     console.log('TOKEN:', TOKEN)
