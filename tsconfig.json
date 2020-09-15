@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "alwaysStrict": true,
+        "baseUrl": "./",
+        "declarationMap": false,
+        "declaration": true,
+        "downlevelIteration": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "extendedDiagnostics": true,
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "newLine": "LF",
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "outDir": "dist",
+        "resolveJsonModule": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "strict": true,
+        "target": "ESNext",
+        "typeRoots": [
+            "node_modules/@types"
+        ]
+    },
+    "include": ["src/**/*.*"]
+}
