@@ -9,6 +9,8 @@
 - [FEATURES](#features)
 - [INSTALLATION](#installation)
 - [SYNOPSIS](#synopsis)
+    - [Negative array indices](#negative-array-indices)
+    - [Wildcards](#wildcards)
 - [DESCRIPTION](#description)
   - [Why?](#why)
   - [Why not?](#why-not)
@@ -36,7 +38,7 @@ get-wild - pluck nested properties from an object with support for wildcards
 
 # FEATURES
 
-- configurable wildcard support, e.g. `"foo.*.baz"`
+- configurable wildcard support, e.g. `"foo.*.bar"`
 - support for negative array indices, e.g. `"foo[-1].bar"`
 - pluggable path parser
 - no dependencies
@@ -57,13 +59,14 @@ import { get } from 'get-wild'
 
 const obj = { foo: { bar: { baz: 'quux' } } }
 
-get(obj, 'foo.bar.baz')              // "quux"
-get(obj, 'foo.bar.buzz', 42)         // 42
-get(obj, ['foo', 'bar', 'baz'])      // "quux"
-get(obj, ['foo', 'bar', 'buzz'], 42) // 42
+get(obj, 'foo.bar.baz')               // "quux"
+get(obj, 'foo.fizz.buzz')             // undefined
+get(obj, 'foo.fizz.buzz', 42)         // 42
+get(obj, ['foo', 'bar', 'baz'])       // "quux"
+get(obj, ['foo', 'fizz', 'buzz'], 42) // 42
 ```
 
-#### negative array indices
+### Negative array indices
 
 ```javascript
 const array = [
@@ -72,12 +75,11 @@ const array = [
     [{ value: 7 }, { value: 8 }, { value: 9 }],
 ]
 
-get(array, '[0][1].value')    // 2
 get(array, '[1][-2].value')   // 5
 get(array, [-1, -1, 'value']) // 9
 ```
 
-#### wildcards
+### Wildcards
 
 ```javascript
 const obj = {
@@ -85,71 +87,50 @@ const obj = {
         'abc123': {
             name: 'John Doe',
             homepage: 'https://example.com/john-doe',
+            hobbies: ['eating', 'sleeping'],
         },
         'def345': {
             name: 'Jane Doe',
-        }
+            homepage: 'https://example.com/jane-doe',
+        },
         'ghi567': {
             name: 'Nemo',
-            homepage: 'https://example.com/nemo',
+            hobbies: ['singing', 'dancing'],
         }
     }
 }
 
-get(obj, 'users.*.name')  // ["John Doe", "Jane Doe", "Nemo"]
-
-// also works with arrays
-get(array, '1.*.value') // [4, 5, 6]
-```
-
-#### remove missing results (flatten)
-
-```javascript
-get(obj, 'users.*.homepage', [])
-// ["https://example.com/john-doe", "https://example.com/nemo"]
-```
-
-#### include all results
-
-```javascript
-get(obj, 'users.**.homepage')
-// ["https://example.com/john-doe", undefined, "https://example.com/nemo"]
-
-get(obj, 'users.**.homepage', 'https://example.com/404')
-// ["https://example.com/john-doe", "https://example.com/404", "https://example.com/nemo"]
-```
-
-#### customize the wildcard tokens
-
-```javascript
-import { getter } from 'get-wild'
-
-const get = getter({ map: '*', flatMap: '**' })
+get(obj, 'users.*.name')
+// ["John Doe", "Jane Doe", "Nemo"]
 
 get(obj, 'users.*.homepage')
-// ["https://example.com/john-doe", undefined, "https://example.com/nemo"]
+// ["https://example.com/john-doe", "https://example.com/jane-doe", undefined]
 
-get(obj, 'users.**.homepage', [])
-// ["https://example.com/john-doe", "https://example.com/nemo"]
+// also works with arrays
+get(array, '1.*.value')    // [4, 5, 6]
+get(array, '[-1].*.value') // [7, 8, 9]
+
 ```
 
-#### supply a custom path parser
+#### Flatten results
 
 ```javascript
-const parser = path => path.split('.')
-const get = getter({ parser })
-const obj = { '': { '': 42 } }
-
-get(obj, '.') // 42
+get(obj, 'users.*.hobbies')
+// ["eating", "sleeping", undefined, "singing", "dancing"]
 ```
 
-#### disable wildcard handling
+#### Remove missing results
 
 ```javascript
-const get = getter({ map: false, flatMap: false })
-const obj = { users: { '*': { '**': { homepage: 'https://example.com' } } } }
+get(obj, 'users.*.hobbies', [])
+// ["eating", "sleeping", "singing", "dancing"]
+```
 
-get(obj, 'users.*.**.homepage') // "https://example.com"
+#### Raw results
+
+```javascript
+get(obj, 'users.**.hobbies')
+// [["eating", "sleeping"], undefined, ["singing", "dancing"]]
 ```
 
 # DESCRIPTION
@@ -159,8 +140,8 @@ from an object, including arrays and any other non-falsey values. This is
 similar to the `get` function provided by Lodash (and many other libraries),
 but it adds the following features:
 
-  - wildcard support, e.g. `"foo.*.baz.*.quux"`
-  - support for negative array indices, e.g. `"foo[1][-1]"`
+  - wildcard support, e.g. `"foo.*.bar.*.baz`
+  - support for negative array indices, e.g. `"foo[-1][-2]"`
 
 In addition to the default `get` implementation, get-wild exports a builder
 function ([`getter`](#getter)) which can be used to create a custom `get` with
@@ -177,7 +158,7 @@ standalone/dependency-free.
 ## Why not?
 
 If you don't need support for wildcards, negative array-indices, or other
-options, there are smaller implementations, e.g.
+[options](#options), there are smaller implementations, e.g.
 [just-safe-get](https://www.npmjs.com/package/just-safe-get).
 
 # TYPES
@@ -205,7 +186,7 @@ type Path = string | Array<PropertyKey>;
 ```javascript
 import { get } from 'get-wild'
 
-get(obj, 'foo.*.baz', [])
+get(obj, 'foo.*.bar', [])
 ```
 
 `get` takes an object, a path and an optional default value, and returns the
@@ -214,7 +195,7 @@ is undefined by default) if the path doesn't exist or the value is undefined.
 The path can be supplied as a dotted expression (string) or an array of steps
 (strings, symbols or numbers).
 
-The [syntax](#syntax) for dotted path expressions mostly matches that of
+The [syntax](#path-syntax) for dotted path expressions mostly matches that of
 regular JavaScript path expressions, with a few additions.
 
 If there are no steps in the path, the object itself is returned (or the
@@ -227,9 +208,9 @@ single lookup into an array of lookup results for values at that location.
 
 The values returned by wildcard matches can be customized. By default, `*`
 flattens the results (using [`flatMap`][flatMap]), while `**` uses
-[`map`][map], which returns the results verbatim, including default/undefined
-values for non-existent paths, though this mapping can be configured (or
-disabled) via the [`map`](#map) and [`flatMap`](#flatmap) options.
+[`map`][map], which returns the results verbatim, though this mapping can be
+configured (or disabled) via the [`map`](#map) and [`flatMap`](#flatmap)
+options.
 
 The `get` export is generated by a builder function, [`getter`](#getter), which
 can be used to create a custom `get` implementation with different options.
@@ -243,13 +224,14 @@ import { getter } from 'get-wild'
 
 const parser = path => path.split('.')
 const get = getter({ parser })
+const obj = { '': { '': 42 } }
 
-get(obj, '...')
+get(obj, '.') // 42
 ```
 
 `getter` is a function which is used to build `get` functions. The default
 `get` export is generated by calling `getter` with no arguments, which uses the
-following defaults (see [below](#options) for details on these options):
+following default [options](#options):
 
 ```javascript
     {
@@ -285,14 +267,14 @@ const get = getter({ parser: memoized })
 get(obj, '...')
 ```
 
-The default parser used by [`get`](#get) to turn a path string into an array of
-steps (strings, symbols and numbers).
+The default parser used by [`get`](#get) to turn a path expression into an
+array of steps (strings, symbols and numbers).
 
 The array of steps used inside the `get` function is not mutated, so, e.g., the
 parser can be memoized (or steps can be pre-parsed) to avoid re-parsing
 long/frequently-used paths.
 
-### Syntax
+### Syntax <a name="path-syntax"></a>
 
 The parser supports an extended version of JavaScript's native path syntax,
 e.g. the path:
@@ -329,19 +311,48 @@ import { getter } from 'get-wild'
 
 const get = getter({ flatMap: '**', map: '*' })
 
-get(obj, 'foo.**.baz.quux')
+get(obj, 'foo.**.bar.baz')
 ```
 
 The token used to map values at the specified location and flatten the results.
 
 If an empty array is supplied as the third argument to [`get`](#get), missing
-values (i.e. from probes of non-existent paths) are excluded from the result.
+values (i.e. from probes of non-existent paths) are removed from the result.
 
 If set to false, wildcard matching with `flatMap` is disabled and the token is
 treated as a regular property name.
 
+### Usage
+
+Wildcard matching with `flatMap` behaves in a similar way to basic
+directory/filename matching with [globs][] (minus the pattern matching). The
+targeted properties (at the end of the path) are returned as direct children of
+the resulting array (wildcard matches always return an array), either as
+matched results or as default values if there's no match.
+
+For example, with the default mapping, a path such as
+`accounts.active.*.followers.*.name`, which extracts the names of all followers
+of active accounts, would return an array of account names interspersed with
+default values where an account doesn't have any followers (or if an account
+doesn't have a name), e.g.:
+
+```javascript
+get(data, 'accounts.active.*.followers.*.name')
+// ["john", "paul", undefined, "george", undefined, "ringo"]
+```
+
+This can be reduced to just the names by setting the default value to an empty
+array, e.g.:
+
+```javascript
+get(data, 'accounts.active.*.followers.*.name', [])
+// ["john", "paul", "george", "ringo"]
+```
+
+### Syntax
+
 Note that with the [default parser](#parser), the token must be a
-[syntactically-valid](#syntax) name, e.g. this doesn't work:
+[syntactically-valid](#path-syntax) name, e.g. this doesn't work:
 
 ```javascript
 import { getter } from 'get-wild'
@@ -371,7 +382,7 @@ import { getter } from 'get-wild'
 
 const get = getter({ map: '*', flatMap: '**' })
 
-get(obj, 'foo.*.baz.quux')
+get(obj, 'foo.*.bar.baz')
 ```
 
 The token used to map values at the specified location without flattening the
@@ -383,6 +394,16 @@ results, so probes of missing values return the default value (which is
 
 If set to false, wildcard matching with `map` is disabled and the token is
 treated as a regular property name.
+
+### Usage
+
+Matching with `map` selects the same values as `flatMap`, but they remain
+nested inside arrays, with each enclosing `map` in the path adding another
+layer of wrapping.
+
+For this reason, `map` is most useful when there's only one in a path (or for
+exploring/debugging) as the targeted values tend to be obscured by the array
+wrappers returned by enclosing wildcards.
 
 ## parser
 
@@ -401,7 +422,7 @@ get(obj, '.') // 42
 A function which takes a path (string) and parses it into an array of property
 names (strings, symbols or numbers). If not supplied, a [default
 parser](#parser) is used which supports an extended version of JavaScript's
-native path [syntax](#syntax).
+native path [syntax](#path-syntax).
 
 # DEVELOPMENT
 
@@ -424,8 +445,9 @@ The following NPM scripts are available:
 
 # COMPATIBILITY
 
-- Environments with support for ES6 and [`Array#flatMap`][flatMap] and
-  [`Array#flat`][flat] ([polyfill](https://www.npmjs.com/package/array-flat-polyfill))
+- Environments with support for ES6 and
+  [`Array#flatMap`][flatMap]/[`Array#flat`][flat]
+  ([polyfill](https://www.npmjs.com/package/array-flat-polyfill))
 
 # SEE ALSO
 
@@ -452,6 +474,7 @@ terms of the [Artistic License 2.0](https://www.opensource.org/licenses/artistic
 
 [flat]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
 [flatMap]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap
+[globs]: https://en.wikipedia.org/wiki/Glob_(programming)
 [jsDelivr]: https://cdn.jsdelivr.net/npm/get-wild@0.0.1/dist/index.umd.min.js
 [map]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
 [unpkg]: https://unpkg.com/get-wild@0.0.1/dist/index.umd.min.js
