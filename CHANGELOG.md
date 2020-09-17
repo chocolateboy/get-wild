@@ -1,4 +1,4 @@
-## 0.0.2 - TBD
+## 0.0.2 - 2020-09-17
 
 - parser:
     - add missing backslash (\\) to the list of excluded name characters
