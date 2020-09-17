@@ -19,7 +19,7 @@
         "build:umd": "cross-env NODE_ENV=production bili --no-map --module-name GetWild --format umd-min -d dist src/index.ts",
         "clean": "shx rm -rf dist",
         "coverage": "run-s build nyc",
-        "doctoc": "markdown-toc --bullets=- --maxdepth 2 -i README.md",
+        "doctoc": "markdown-toc --bullets=- --maxdepth 3 -i README.md",
         "nyc": "nyc ava --verbose \"./test/**/*.js\"",
         "prepublishOnly": "run-s clean build:release nyc",
         "rebuild": "run-s clean build",

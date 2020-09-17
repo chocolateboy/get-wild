@@ -1,5 +1,6 @@
-## 0.0.4 - TBD
+## 0.1.0 - TBD
 
+- add a `default` option to bake in the default value
 - speed up array globbing
 
 ## 0.0.3 - 2020-09-17

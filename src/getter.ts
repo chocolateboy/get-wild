@@ -1,6 +1,7 @@
 import defaultParser from './parser'
 
 export type Options = {
+    default?: unknown,
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
     parser?: (path: string) => Array<PropertyKey>;
@@ -23,13 +24,13 @@ const OPTIONS: Options = { [FLAT_MAP]: '*', [MAP]: '**' }
 
 export const getter = (_options: Options = {}) => {
     const options = $Object.assign({}, OPTIONS, _options)
+    const { default: $Default, parser: parse = defaultParser } = options
     const flatMap = options[FLAT_MAP] === false ? NO_FLAT_MAP : options[FLAT_MAP]
     const map = options[MAP] === false ? NO_MAP : options[MAP]
-    const parse = options.parser || defaultParser
 
     function get <D, O, T extends unknown>(obj: O, path: Path, $default: D): D | O | T | Array<D | T>
     function get <O, T extends unknown>(obj: O, path: Path): O | T | undefined | Array<T | undefined>
-    function get (obj: any, path: Path, $default = undefined) {
+    function get (obj: any, path: Path, $default = $Default) {
         let props: Array<PropertyKey>
 
         switch (typeof path) {
@@ -58,12 +59,13 @@ export const getter = (_options: Options = {}) => {
             }
 
             const prop = props[i]
+            const objIsArray = isArray(obj)
 
             if ((prop === flatMap) || (prop === map)) {
                 // Object.values is very forgiving and works with anything that
                 // can be turned into an object via Object(...), i.e. everything
                 // but undefined and null, which we've guarded against above.
-                const values = isArray(obj) ? obj : $Object.values(obj)
+                const values = objIsArray ? obj : $Object.values(obj)
 
                 if (i === lastIndex) {
                     return prop === flatMap ? values.flat() : values
@@ -78,7 +80,7 @@ export const getter = (_options: Options = {}) => {
                 }
             }
 
-            if (isArray(obj) && Number.isInteger(<number>prop) && <number>prop < 0) {
+            if (objIsArray && Number.isInteger(<number>prop) && <number>prop < 0) {
                 obj = obj[obj.length + <number>prop]
             } else {
                 // XXX cast the symbol to a string to work around a TypeScript bug:
