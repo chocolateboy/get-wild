@@ -6,14 +6,14 @@
     "module": "dist/index.esm.js",
     "unpkg": "dist/index.umd.min.js",
     "jsdelivr": "dist/index.umd.min.js",
-    "types": "dist/index.d.ts",
+    "types": "index.d.ts",
     "repository": "https://github.com/chocolateboy/get-wild",
     "author": "chocolateboy",
     "license": "Artistic-2.0",
     "scripts": {
         "build": "bili --map --format cjs -d dist src/index.ts",
         "build:default": "cross-env NODE_ENV=production bili --no-map --format cjs,esm -d dist src/index.ts",
-        "build:dts": "npm-dts generate -o dist/index.d.ts",
+        "build:dts": "npm-dts generate -o index.d.ts",
         "build:min": "cross-env NODE_ENV=production bili --no-map --format esm-min -d dist src/index.ts",
         "build:release": "run-s typecheck build:default build:umd build:dts",
         "build:umd": "cross-env NODE_ENV=production bili --no-map --module-name GetWild --format umd-min -d dist src/index.ts",
@@ -29,10 +29,10 @@
         "typecheck": "tsc --noEmit --noImplicitAny --noUnusedLocals --noUnusedParameters --strict"
     },
     "files": [
-        "dist/index.d.ts",
         "dist/index.esm.js",
         "dist/index.js",
-        "dist/index.umd.min.js"
+        "dist/index.umd.min.js",
+        "index.d.ts"
     ],
     "browserslist": "maintained node versions",
     "devDependencies": {
