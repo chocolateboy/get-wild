@@ -445,10 +445,10 @@ const obj = { '': { '': 42 } }
 get(obj, '.') // 42
 ```
 
-A function which takes a path (string) and parses it into an array of property
-names (strings, symbols or numbers). If not supplied, a [default
-parser](#parser) is used which supports an extended version of JavaScript's
-native path [syntax](#path-syntax).
+A function which takes a path expression (string) and parses it into an array
+of property names (strings, symbols or numbers). If not supplied, a
+[default parser](#parser) is used which supports an extended version of
+JavaScript's native path [syntax](#path-syntax).
 
 # DEVELOPMENT
 
@@ -472,7 +472,7 @@ The following NPM scripts are available:
 # COMPATIBILITY
 
 - Environments with support for ES6 and
-  [`Array#flatMap`][flatMap]/[`Array#flat`][flat]
+  [`Array#flat`][flat]/[`Array#flatMap`][flatMap]
   ([polyfill](https://www.npmjs.com/package/array-flat-polyfill))
 
 # SEE ALSO
