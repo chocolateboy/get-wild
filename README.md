@@ -485,7 +485,7 @@ The following NPM scripts are available:
 
 # VERSION
 
-0.1.0
+0.1.1
 
 # AUTHOR
 
@@ -501,6 +501,6 @@ terms of the [Artistic License 2.0](https://www.opensource.org/licenses/artistic
 [flat]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
 [flatMap]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap
 [globs]: https://en.wikipedia.org/wiki/Glob_(programming)
-[jsDelivr]: https://cdn.jsdelivr.net/npm/get-wild@0.1.0/dist/index.umd.min.js
+[jsDelivr]: https://cdn.jsdelivr.net/npm/get-wild@0.1.1/dist/index.umd.min.js
 [map]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
-[unpkg]: https://unpkg.com/get-wild@0.1.0/dist/index.umd.min.js
+[unpkg]: https://unpkg.com/get-wild@0.1.1/dist/index.umd.min.js

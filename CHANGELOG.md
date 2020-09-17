@@ -1,4 +1,4 @@
-## 0.1.1 - TBD
+## 0.1.1 - 2020-09-17
 
 - speed up wildcard matching
 
