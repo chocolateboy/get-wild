@@ -15,18 +15,21 @@ type Dict = Record<PropertyKey, any>;
 const { isArray } = Array
 const $Object = Object
 const $Symbol = Symbol
-const MAP = 'map'
-const FLAT_MAP = 'flatMap'
 
 const NO_MAP = $Symbol()
 const NO_FLAT_MAP = $Symbol()
-const OPTIONS: Options = { [FLAT_MAP]: '*', [MAP]: '**' }
+const OPTIONS: Options = { flatMap: '*', map: '**' }
 
 export const getter = (_options: Options = {}) => {
     const options = $Object.assign({}, OPTIONS, _options)
-    const { default: $Default, parser: parse = defaultParser } = options
-    const flatMap = options[FLAT_MAP] === false ? NO_FLAT_MAP : options[FLAT_MAP]
-    const map = options[MAP] === false ? NO_MAP : options[MAP]
+    const {
+        default: $Default,
+        flatMap: $flatMap,
+        map: $map,
+        parser: parse = defaultParser,
+    } = options
+    const flatMap = $flatMap === false ? NO_FLAT_MAP : $flatMap
+    const map = $map === false ? NO_MAP : $map
 
     function get <D, O, T extends unknown>(obj: O, path: Path, $default: D): D | O | T | Array<D | T>
     function get <O, T extends unknown>(obj: O, path: Path): O | T | undefined | Array<T | undefined>
