@@ -1,13 +1,14 @@
 import defaultParser from './parser'
 
 export type Options = {
-    default?: unknown,
+    collect?: (value: {}) => ReadonlyArray<unknown>;
+    default?: unknown;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
-    parser?: (path: string) => Array<PropertyKey>;
+    parser?: (path: string) => ReadonlyArray<PropertyKey>;
 };
 
-export type Path = string | Array<PropertyKey>;
+export type Path = string | ReadonlyArray<PropertyKey>;
 
 type Dict = Record<PropertyKey, any>;
 
@@ -23,6 +24,7 @@ const OPTIONS: Options = { flatMap: '*', map: '**' }
 export const getter = (_options: Options = {}) => {
     const options = $Object.assign({}, OPTIONS, _options)
     const {
+        collect = $Object.values,
         default: $Default,
         flatMap: $flatMap,
         map: $map,
@@ -34,7 +36,7 @@ export const getter = (_options: Options = {}) => {
     function get <D, O, T extends unknown>(obj: O, path: Path, $default: D): D | O | T | Array<D | T>
     function get <O, T extends unknown>(obj: O, path: Path): O | T | undefined | Array<T | undefined>
     function get (obj: any, path: Path, $default = $Default) {
-        let props: Array<PropertyKey>
+        let props: ReadonlyArray<PropertyKey>
 
         switch (typeof path) {
             case 'string':
@@ -68,7 +70,7 @@ export const getter = (_options: Options = {}) => {
                 // Object.values is very forgiving and works with anything that
                 // can be turned into an object via Object(...), i.e. everything
                 // but undefined and null, which we've guarded against above.
-                const values = objIsArray ? obj : $Object.values(obj)
+                const values = objIsArray ? obj : collect(obj)
 
                 if (i === lastIndex) {
                     return prop === flatMap ? values.flat() : values

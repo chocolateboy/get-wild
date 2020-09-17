@@ -20,6 +20,7 @@
   - [getter](#getter)
   - [parser](#parser)
 - [OPTIONS](#options)
+  - [collect](#collect)
   - [default](#default)
   - [flatMap](#flatmap)
   - [map](#map)
@@ -168,6 +169,7 @@ The following types are referenced in the descriptions below.
 
 ```typescript
 type Options = {
+    collect?: (value: {}) ⇒ Array<any>;
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
@@ -203,10 +205,11 @@ regular JavaScript path expressions, with a few additions.
 If there are no steps in the path, the object itself is returned (or the
 default value if the object is undefined).
 
-Wildcard matching is performed by extracting an array of values at the
-wildcard's location and recursively [`get`](#get)ting the remainder of the path
-from each value. Wildcards can be used at any locations in a path to turn a
-single lookup into an array of lookup results for values at that location.
+Wildcard matching is performed by [`collect`](#collect)ing an array of values
+at the wildcard's location and recursively [`get`](#get)ting the remainder of
+the path from each value. Wildcards can be used at any locations in a path to
+turn a single lookup into an array of lookup results for values at that
+location.
 
 The values returned by wildcard matches can be customized. By default, `*`
 flattens the results (using [`flatMap`][flatMap]), while `**` uses
@@ -303,6 +306,42 @@ must not be preceded by a dot.
 If the path is an empty string, an empty array is returned.
 
 # OPTIONS
+
+## collect
+
+- **Type**: `(value: {}) ⇒ Array<any>`
+- **Default**: `Object.values`
+
+```javascript
+import { getter } from 'get-wild'
+
+const collect = value => {
+    if (value instanceof Map || value instanceof Set) {
+        return Array.from(value.values())
+    } else {
+        return Object.values(value)
+    }
+}
+
+const map = new Map([
+    [1, { value: 'foo' }],
+    [2, { value: 'bar' }],
+    [3, { value: 'baz' }],
+    [4, { value: 'quux' }],
+])
+
+const obj = { map }
+const get = getter({ collect })
+
+get(obj, 'map.*.value')
+// ["foo", "bar", "baz", "quux"]
+```
+
+The `collect` function is used to convert a (truthy) value under a wildcard
+token into an array of values. If not supplied, it defaults to
+[`Object.values`][Object.values], which works with objects, arrays, and other
+non-falsey values. Can be overridden to add support for traversable values that
+aren't plain objects, e.g. ES6 Set and Map instances.
 
 ## default
 
@@ -463,6 +502,7 @@ The following NPM scripts are available:
 - clean - remove the target directory and its contents
 - doctoc - generate the README's TOC (table of contents)
 - rebuild - clean the target directory and recompile the library
+- repl - launch a node REPL with the library loaded
 - test - recompile the library and run the test suite
 - test:run - run the test suite
 - typecheck - sanity check the library's type definitions
@@ -503,4 +543,5 @@ terms of the [Artistic License 2.0](https://www.opensource.org/licenses/artistic
 [globs]: https://en.wikipedia.org/wiki/Glob_(programming)
 [jsDelivr]: https://cdn.jsdelivr.net/npm/get-wild@0.1.1/dist/index.umd.min.js
 [map]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+[Object.values]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
 [unpkg]: https://unpkg.com/get-wild@0.1.1/dist/index.umd.min.js

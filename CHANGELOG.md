@@ -1,3 +1,7 @@
+## 0.2.0 - TBD
+
+- add a `collect` option to customize value extraction
+
 ## 0.1.1 - 2020-09-17
 
 - speed up wildcard matching

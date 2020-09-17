@@ -108,6 +108,48 @@ test('export.parser', t => {
     t.is(get(obj, 'baz.bar.foo'), 'quux')
 })
 
+test('option.collect', t => {
+    // example from the README
+
+    const want = ['foo', 'bar', 'baz', 'quux']
+
+    const collect = value => {
+        if (value instanceof Map || value instanceof Set) {
+            return Array.from(value.values())
+        } else {
+            return Object.values(value)
+        }
+    }
+
+    const obj = {
+        1: { value: 'foo' },
+        2: { value: 'bar' },
+        3: { value: 'baz' },
+        4: { value: 'quux' },
+    }
+
+    const map = new Map([
+        [1, { value: 'foo' }],
+        [2, { value: 'bar' }],
+        [3, { value: 'baz' }],
+        [4, { value: 'quux' }],
+    ])
+
+    const set = new Set([
+        { value: 'foo' },
+        { value: 'bar' },
+        { value: 'baz' },
+        { value: 'quux' },
+    ])
+
+    const object = { obj, map, set }
+    const get = getter({ collect })
+
+    t.deepEqual(get(object, 'obj.*.value'), want)
+    t.deepEqual(get(object, 'map.*.value'), want)
+    t.deepEqual(get(object, 'set.*.value'), want)
+})
+
 test('option.default', t => {
     const path1 = ['nodes', '*', 'foo', 'bar', 'baz']
     const path2 = ['nodes', '**', 'foo', 'bar', 'baz']
