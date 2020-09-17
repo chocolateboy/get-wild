@@ -183,9 +183,7 @@ type Path = string | Array<PropertyKey>;
 
 ## get
 
-- **Type**:
-    - `<D, O, T extends unknown>(obj: O, path: Path, $default: D) ⇒ D | O | T | Array<D | T>`
-    - `<O, T extends unknown>(obj: O, path: Path) ⇒ O | T | undefined | Array<T | undefined>`
+- **Type**: `(obj: any, path: Path, $default?: any) ⇒ any`
 
 ```javascript
 import { get } from 'get-wild'
@@ -337,11 +335,14 @@ get(obj, 'map.*.value')
 // ["foo", "bar", "baz", "quux"]
 ```
 
-The `collect` function is used to convert a (truthy) value under a wildcard
-token into an array of values. If not supplied, it defaults to
+The `collect` function is used to convert a value under a wildcard token into
+an array of values. If not supplied, it defaults to
 [`Object.values`][Object.values], which works with objects, arrays, and other
-non-falsey values. Can be overridden to add support for traversable values that
-aren't plain objects, e.g. ES6 Set and Map instances.
+non-nullish values. Can be overridden to add support for traversable values
+that aren't plain objects, e.g. ES6 Map and Set instances.
+
+Note that the value passed to `collect` is not falsey and not an array, as both
+are handled without calling `collect`.
 
 ## default
 
@@ -422,8 +423,8 @@ Note that with the [default parser](#parser), the token must be a
 ```javascript
 import { getter } from 'get-wild'
 
-const get = getter({ flatMap: '[]' })
 const obj = { foo: [{ bar: 1 }, { bar: 2 }] }
+const get = getter({ flatMap: '[]' })
 
 get(obj, 'foo.[].bar') // SyntaxError: Invalid step @ 3: "foo.[].bar"
 ```
