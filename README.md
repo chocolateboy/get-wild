@@ -140,7 +140,7 @@ from an object, including arrays and any other non-falsey values. This is
 similar to the `get` function provided by Lodash (and many other libraries),
 but it adds the following features:
 
-  - wildcard support, e.g. `"foo.*.bar.*.baz`
+  - wildcard support, e.g. `"foo.*.bar.*.baz"`
   - support for negative array indices, e.g. `"foo[-1][-2]"`
 
 In addition to the default `get` implementation, get-wild exports a builder
@@ -334,7 +334,7 @@ For example, with the default mapping, a path such as
 `accounts.active.*.followers.*.name`, which extracts the names of all followers
 of active accounts, would return an array of account names interspersed with
 default values where an account doesn't have any followers (or if an account
-doesn't have a name), e.g.:
+doesn't have a name property), e.g.:
 
 ```javascript
 get(data, 'accounts.active.*.followers.*.name')
