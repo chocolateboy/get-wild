@@ -180,8 +180,8 @@ type Path = string | Array<PropertyKey>;
 ## get
 
 - **Type**:
-    - `<D, O, T extends unknown>(obj: O, path: Path, $default: D): D | O | T | Array<D | T>`
-    - `<O, T extends unknown>(obj: O, path: Path): O | T | undefined | Array<T | undefined>`
+    - `<D, O, T extends unknown>(obj: O, path: Path, $default: D) ⇒ D | O | T | Array<D | T>`
+    - `<O, T extends unknown>(obj: O, path: Path) ⇒ O | T | undefined | Array<T | undefined>`
 
 ```javascript
 import { get } from 'get-wild'

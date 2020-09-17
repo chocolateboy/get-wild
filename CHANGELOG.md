@@ -1,3 +1,7 @@
+## 0.0.4 - TBD
+
+- speed up array globbing
+
 ## 0.0.3 - 2020-09-17
 
 - documentation fix

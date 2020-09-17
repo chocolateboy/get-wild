@@ -63,7 +63,7 @@ export const getter = (_options: Options = {}) => {
                 // Object.values is very forgiving and works with anything that
                 // can be turned into an object via Object(...), i.e. everything
                 // but undefined and null, which we've guarded against above.
-                const values = $Object.values(obj)
+                const values = isArray(obj) ? obj : $Object.values(obj)
 
                 if (i === lastIndex) {
                     return prop === flatMap ? values.flat() : values
