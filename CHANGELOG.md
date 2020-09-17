@@ -1,3 +1,7 @@
+## 0.1.1 - TBD
+
+- speed up wildcard matching
+
 ## 0.1.0 - 2020-09-17
 
 - add a `default` option to bake in the default value

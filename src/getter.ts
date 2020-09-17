@@ -72,13 +72,17 @@ export const getter = (_options: Options = {}) => {
 
                 if (i === lastIndex) {
                     return prop === flatMap ? values.flat() : values
-                } else if (prop === flatMap) {
+                }
+
+                const newProps = props.slice(i + 1)
+
+                if (prop === flatMap) {
                     return values.flatMap(<V>(value: V) => {
-                        return get(value, props.slice(i + 1), $default)
+                        return get(value, newProps, $default)
                     })
                 } else {
                     return values.map(<V>(value: V) => {
-                        return get(value, props.slice(i + 1), $default)
+                        return get(value, newProps, $default)
                     })
                 }
             }
