@@ -1,3 +1,7 @@
+## 1.0.1 - TBD
+
+- remove superfluous file from the package
+
 ## 1.0.0 - 2020-09-18
 
 - allow the path to be a single number or symbol

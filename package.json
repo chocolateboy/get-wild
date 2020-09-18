@@ -31,7 +31,7 @@
         "dist/index.esm.js",
         "dist/index.js",
         "dist/index.umd.min.js",
-        "index.d.ts"
+        "/index.d.ts"
     ],
     "browserslist": "maintained node versions",
     "devDependencies": {
