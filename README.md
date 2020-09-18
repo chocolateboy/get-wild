@@ -176,7 +176,7 @@ type Options = {
     parse?: (path: string) => Array<PropertyKey>;
 };
 
-type Path = string | Array<PropertyKey>;
+type Path = PropertyKey | Array<PropertyKey>;
 ```
 
 # EXPORTS
@@ -194,8 +194,8 @@ get(obj, 'foo.*.bar', [])
 `get` takes an object, a path and an optional default value, and returns the
 value(s) found in the object at the specified path, or the default value (which
 is undefined by default) if the path doesn't exist or the value is undefined.
-The path can be supplied as a dotted expression (string) or an array of steps
-(strings, symbols or numbers).
+The path can be supplied as a dotted expression (string), symbol or number, or
+an array of steps (strings, symbols or numbers).
 
 The [syntax](#path-syntax) for dotted path expressions mostly matches that of
 regular JavaScript path expressions, with a few additions.
@@ -238,6 +238,7 @@ following default [options](#options):
 
 ```javascript
     {
+        collect: Object.values,
         default: undefined,
         flatMap: '*',
         map: '**',
@@ -454,22 +455,12 @@ get(obj, 'foo.*.bar.baz')
 The token used to map values at the specified location without flattening the
 results.
 
-Unlike [`flatMap`](#flatmap), wildcard matching with `map` preserves all
-results, so the default value (which is `undefined` by default) is returned for
-missing/undefined properties.
-
-If set to false, wildcard matching with `map` is disabled and the token is
-treated as a regular property name.
-
-### Usage
-
 Matching with `map` selects the same values as `flatMap`, but they remain
 nested inside arrays, with each enclosing `map` in the path adding another
 layer of wrapping.
 
-For this reason, `map` is most useful when there's only one in a path (or for
-exploring/debugging) as the selected values tend to be obscured by the array
-wrappers returned by enclosing wildcards.
+If set to false, wildcard matching with `map` is disabled and the token is
+treated as a regular property name.
 
 ## parser
 

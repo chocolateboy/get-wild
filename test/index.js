@@ -402,6 +402,22 @@ test('option.map = false', t => {
     t.deepEqual(get(obj, ['foo', 'bar', '**']), 'quux')
 })
 
+test('path', t => {
+    const s = Symbol()
+    const array = ['foo', 'bar', 'baz']
+    const obj = { [s]: 42, baz: 'quux' }
+
+    t.deepEqual(get(array, 0), 'foo')
+    t.deepEqual(get(array, [0]), 'foo')
+    t.deepEqual(get(array, -1), 'baz')
+    t.deepEqual(get(array, [-1]), 'baz')
+
+    t.deepEqual(get(obj, s), 42)
+    t.deepEqual(get(obj, [s]), 42)
+    t.deepEqual(get(obj, 'baz'), 'quux')
+    t.deepEqual(get(obj, ['baz']), 'quux')
+})
+
 test('scalar', t => {
     t.deepEqual(get(NODE, []), NODE)
     t.deepEqual(get(NODE, 'no-such-key'), undefined)

@@ -12,6 +12,5 @@ module.exports = {
 
     presets: [
         'bili/babel',
-        // ['@babel/preset-env', { debug: true, useBuiltIns: 'usage', corejs: 3 }],
     ],
 }

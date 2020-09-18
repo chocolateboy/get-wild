@@ -8,7 +8,7 @@ export type Options = {
     parser?: (path: string) => Array<PropertyKey>;
 };
 
-export type Path = string | Array<PropertyKey>;
+export type Path = PropertyKey | Array<PropertyKey>;
 
 type Dict = Record<PropertyKey, any>;
 

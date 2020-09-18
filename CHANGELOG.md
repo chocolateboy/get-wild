@@ -1,3 +1,7 @@
+## 1.0.0 - TBD
+
+- allow the path to be a single number or symbol
+
 ## 0.3.1 - 2020-09-18
 
 - type tweaks

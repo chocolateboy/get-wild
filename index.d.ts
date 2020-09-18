@@ -6,7 +6,7 @@ export type Options = {
     parser?: (path: string) => Array<PropertyKey>;
 };
 
-export type Path = string | Array<PropertyKey>;
+export type Path = PropertyKey | Array<PropertyKey>;
 
 export const get: (obj: any, path: Path, $default?: any) => any;
 export const getter: (options?: Options) => typeof get;
