@@ -1,4 +1,4 @@
-## 1.0.1 - TBD
+## 1.0.1 - 2020-09-18
 
 - remove superfluous file from the package
 
