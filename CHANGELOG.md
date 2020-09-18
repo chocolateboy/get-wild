@@ -1,4 +1,4 @@
-## 1.0.0 - TBD
+## 1.0.0 - 2020-09-18
 
 - allow the path to be a single number or symbol
 
