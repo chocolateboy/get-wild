@@ -240,10 +240,12 @@ test('option.default', t => {
 
 test('option.parser', t => {
     const parser = path => path.split('.')
-    const get = getter({ parser })
+    const get1 = getter({ parser })
+    const get2 = getter({ parser: '.' })
     const obj = { '': { '': 42 } }
 
-    t.is(get(obj, '.'), 42)
+    t.is(get1(obj, '.'), 42)
+    t.is(get2(obj, '.'), 42)
 })
 
 test('option.flatMap', t => {

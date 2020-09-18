@@ -1,3 +1,7 @@
+## 1.1.0 - TBD
+
+- allow `parser` to accept a string as a shortcut for `path => path.split(string)`
+
 ## 1.0.1 - 2020-09-18
 
 - remove superfluous file from the package

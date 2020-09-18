@@ -3,7 +3,7 @@ declare type Options = {
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
-    parser?: (path: string) => Array<PropertyKey>;
+    parser?: string | ((path: string) => Array<PropertyKey>);
 };
 declare type Path = PropertyKey | Array<PropertyKey>;
 declare const getter: (options?: Options) => (obj: any, path: Path, $default?: any) => any;

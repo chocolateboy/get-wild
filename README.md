@@ -4,6 +4,7 @@
 [![NPM Version](https://img.shields.io/npm/v/get-wild.svg)](https://www.npmjs.org/package/get-wild)
 
 <!-- TOC -->
+
 - [NAME](#name)
 - [FEATURES](#features)
 - [INSTALLATION](#installation)
@@ -147,13 +148,13 @@ but it adds the following features:
   - wildcard support, e.g. `"foo.*.bar.*.baz"`
   - support for negative array indices, e.g. `"foo[-1][-2]"`
 
-In addition to the default `get` implementation, get-wild exports a builder
-function ([`getter`](#getter)) which can be used to create a custom `get` with
-different [options](#options) baked in.
+In addition to the default [`get`](#get) implementation, get-wild exports a
+builder function ([`getter`](#getter)) which can be used to create a custom
+`get` with different [options](#options) baked in.
 
 ## Why?
 
-I needed a small, dependency-free version of `Lodash#get` with wildcard
+I needed a small, dependency-free version of `Lodash.get` with wildcard
 support, and preferably with an option to filter out/exclude missing values.
 Although there are a huge number of `get` implementations on NPM, I could only
 find one or two with wildcard support and none that are
@@ -175,7 +176,7 @@ type Options = {
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
-    parse?: (path: string) => Array<PropertyKey>;
+    parser?: string | ((path: string) => Array<PropertyKey>);
 };
 
 type Path = PropertyKey | Array<PropertyKey>;
@@ -197,7 +198,7 @@ get(obj, 'foo.*.bar', [])
 value(s) found in the object at the specified path, or the default value (which
 is undefined by default) if the path doesn't exist or the value is undefined.
 The path can be supplied as a dotted expression (string), symbol or number, or
-an array of steps (strings, symbols or numbers).
+an array of strings, symbols or numbers.
 
 The [syntax](#path-syntax) for dotted path expressions mostly matches that of
 regular JavaScript path expressions, with a few additions.
@@ -404,7 +405,7 @@ matched results or as default values if there's no match.
 For example, with the default mapping, a path such as
 `accounts.active.*.followers.*.name`, which extracts the names of all followers
 of active accounts, would return an array of account names interspersed with
-default values where an account doesn't have any followers (or if an account's
+default values where an account doesn't have any followers (or if a follower's
 name is undefined), e.g.:
 
 ```javascript
@@ -469,7 +470,7 @@ treated as a regular property name.
 
 ## parser
 
-- **Type**: `(path: string) ⇒ Array<PropertyKey>`
+- **Type**: `string | ((path: string) ⇒ Array<PropertyKey>)`
 
 ```javascript
 import { getter } from  'get-wild'
@@ -485,6 +486,18 @@ A function which takes a path expression (string) and parses it into an array
 of property names (strings, symbols or numbers). If not supplied, a
 [default parser](#parser) is used which supports an extended version of
 JavaScript's native path [syntax](#path-syntax).
+
+As a shortcut, if the value is a string, a function which splits the path on
+that string is used, i.e. the following are equivalent:
+
+```javascript
+const parser = path => path.split('.')
+const get = getter({ parser })
+```
+
+```javascript
+const get = getter({ parser: '.' })
+```
 
 # DEVELOPMENT
 
