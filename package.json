@@ -1,6 +1,6 @@
 {
     "name": "get-wild",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Pluck nested properties from an object with support for wildcards",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",
