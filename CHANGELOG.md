@@ -1,3 +1,7 @@
+## 0.3.1 - TBD
+
+- type tweaks
+
 ## 0.3.0 - 2020-09-18
 
 - type fixes

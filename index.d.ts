@@ -3,11 +3,11 @@ export type Options = {
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
-    parser?: (path: string) => ReadonlyArray<PropertyKey>;
+    parser?: (path: string) => Array<PropertyKey>;
 };
 
-export type Path = string | ReadonlyArray<PropertyKey>;
+export type Path = string | Array<PropertyKey>;
 
-export const get: <O>(obj: O, path: Path, $default?: any) => any;
+export const get: (obj: any, path: Path, $default?: any) => any;
 export const getter: (options?: Options) => typeof get;
 export const parser: (path: string) => Array<PropertyKey>;
