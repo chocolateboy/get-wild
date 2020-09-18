@@ -1,13 +1,14 @@
-export type Options = {
+declare type Options = {
     collect?: (value: {}) => Array<any>;
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
     parser?: (path: string) => Array<PropertyKey>;
 };
+declare type Path = PropertyKey | Array<PropertyKey>;
+declare const getter: (options?: Options) => (obj: any, path: Path, $default?: any) => any;
+declare const get: (obj: any, path: Path, $default?: any) => any;
 
-export type Path = PropertyKey | Array<PropertyKey>;
+declare const parser: (path: string) => (string | number)[];
 
-export const get: (obj: any, path: Path, $default?: any) => any;
-export const getter: (options?: Options) => typeof get;
-export const parser: (path: string) => Array<PropertyKey>;
+export { Options, Path, get, getter, parser };

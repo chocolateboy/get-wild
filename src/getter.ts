@@ -21,20 +21,21 @@ const NO_MAP = $Symbol()
 const NO_FLAT_MAP = $Symbol()
 const OPTIONS: Options = { flatMap: '*', map: '**' }
 
-export const getter = (_options: Options = {}) => {
-    const options = $Object.assign({}, OPTIONS, _options)
+export const getter = (options: Options = {}) => {
+    const $options = $Object.assign({}, OPTIONS, options)
+
     const {
         collect = $Object.values,
         default: $Default,
         flatMap: $flatMap,
         map: $map,
         parser: parse = defaultParser,
-    } = options
+    } = $options
 
     const flatMap = $flatMap === false ? NO_FLAT_MAP : $flatMap
     const map = $map === false ? NO_MAP : $map
 
-    return <O>(obj: O, path: Path, $default = $Default): any => {
+    return (obj: any, path: Path, $default = $Default): any => {
         let props: ReadonlyArray<PropertyKey>
 
         switch (typeof path) {
