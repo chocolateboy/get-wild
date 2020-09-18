@@ -3,14 +3,13 @@
 [![Build Status](https://travis-ci.org/chocolateboy/get-wild.svg)](https://travis-ci.org/chocolateboy/get-wild)
 [![NPM Version](https://img.shields.io/npm/v/get-wild.svg)](https://www.npmjs.org/package/get-wild)
 
-<!-- toc -->
-
+<!-- TOC -->
 - [NAME](#name)
 - [FEATURES](#features)
 - [INSTALLATION](#installation)
 - [SYNOPSIS](#synopsis)
-    - [Negative array indices](#negative-array-indices)
-    - [Wildcards](#wildcards)
+  - [Negative array indices](#negative-array-indices)
+  - [Wildcards](#wildcards)
 - [DESCRIPTION](#description)
   - [Why?](#why)
   - [Why not?](#why-not)
@@ -32,7 +31,7 @@
 - [AUTHOR](#author)
 - [COPYRIGHT AND LICENSE](#copyright-and-license)
 
-<!-- tocstop -->
+<!-- TOC END -->
 
 # NAME
 
@@ -114,6 +113,7 @@ get(array, '[-1].*.value') // [7, 8, 9]
 
 ```
 
+<!-- TOC:ignore -->
 #### Flatten results
 
 ```javascript
@@ -121,6 +121,7 @@ get(data, 'users.*.hobbies')
 // ["eating", "sleeping", undefined, "singing", "dancing"]
 ```
 
+<!-- TOC:ignore -->
 #### Remove missing results
 
 ```javascript
@@ -128,6 +129,7 @@ get(data, 'users.*.hobbies', [])
 // ["eating", "sleeping", "singing", "dancing"]
 ```
 
+<!-- TOC:ignore -->
 #### Raw results
 
 ```javascript
@@ -279,6 +281,7 @@ The array of steps used inside the `get` function is not mutated, so, e.g., the
 parser can be memoized (or steps can be pre-parsed) to avoid re-parsing
 long/frequently-used paths.
 
+<!-- TOC:ignore -->
 ### Syntax <a name="path-syntax"></a>
 
 The parser supports an extended version of JavaScript's native path syntax,
@@ -389,6 +392,7 @@ missing/undefined values are removed from the result.
 If set to false, wildcard matching with `flatMap` is disabled and the token is
 treated as a regular property name.
 
+<!-- TOC:ignore -->
 ### Usage
 
 Wildcard matching with `flatMap` behaves in a similar way to basic
@@ -416,6 +420,7 @@ get(data, 'accounts.active.*.followers.*.name', [])
 // ["john", "paul", "george", "ringo"]
 ```
 
+<!-- TOC:ignore -->
 ### Syntax
 
 Note that with the [default parser](#parser), the token must be a
@@ -485,14 +490,15 @@ JavaScript's native path [syntax](#path-syntax).
 
 <details>
 
+<!-- TOC:ignore -->
 ## NPM Scripts
 
 The following NPM scripts are available:
 
 - build - compile the library for testing and save to the target directory
+- build:doc - generate the README's TOC (table of contents)
 - build:release - compile the library for release and save to the target directory
 - clean - remove the target directory and its contents
-- doctoc - generate the README's TOC (table of contents)
 - rebuild - clean the target directory and recompile the library
 - repl - launch a node REPL with the library loaded
 - test - recompile the library and run the test suite
