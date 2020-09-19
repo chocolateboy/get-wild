@@ -1,4 +1,4 @@
-## 1.1.0 - TBD
+## 1.1.0 - 2020-09-19
 
 - allow `parser` to accept a string as a shortcut for `path => path.split(string)`
 
