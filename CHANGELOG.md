@@ -1,4 +1,4 @@
-## 1.2.0 - TBD
+## 1.2.0 - 2020-09-19
 
 - add `exports.split` as an alias for `exports.parser`
 - add `options.split` as an alias for `options.parser`
