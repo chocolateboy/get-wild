@@ -5,7 +5,8 @@ export type Options = {
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
-    parser?: string | ((path: string) => Array<PropertyKey>);
+    parser?: Options['split'];
+    split?: string | ((path: string) => Array<PropertyKey>);
 };
 
 export type Path = PropertyKey | Array<PropertyKey>;
@@ -23,19 +24,20 @@ const NO_FLAT_MAP = $Symbol()
 export const getter = (options: Options = {}) => {
     const {
         collect = $Object.values,
-        default: $Default,
+        default: $$default,
         flatMap: $flatMap = '*',
         map: $map = '**',
         parser = defaultParser,
+        split = parser,
     } = options
 
     const flatMap = $flatMap === false ? NO_FLAT_MAP : $flatMap
     const map = $map === false ? NO_MAP : $map
-    const parse = typeof parser === 'string'
-        ? (path: string) => path.split(parser)
-        : parser
+    const parse = typeof split === 'string'
+        ? (path: string) => path.split(split)
+        : split
 
-    return (obj: any, path: Path, $default = $Default): any => {
+    return (obj: any, path: Path, $default = $$default): any => {
         let props: ReadonlyArray<PropertyKey>
 
         switch (typeof path) {

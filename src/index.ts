@@ -1,3 +1,2 @@
-export { get, getter, Options, Path } from './getter'
-export { default as parser }          from './parser'
-
+export { get, getter, Options, Path }          from './getter'
+export { default as parser, default as split } from './parser'

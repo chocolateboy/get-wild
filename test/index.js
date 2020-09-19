@@ -3,7 +3,8 @@ const test = require('ava')
 const {
     get,
     getter,
-    parser: defaultParser
+    parser: defaultParser,
+    split: defaultSplit
 } = require('..')
 
 require('array-flat-polyfill') // for Node v10
@@ -103,6 +104,14 @@ test('error', t => {
 test('export.parser', t => {
     const wrapper = path => defaultParser(path).reverse()
     const get = getter({ parser: wrapper })
+    const obj = { foo: { bar: { baz: 'quux' } } }
+
+    t.is(get(obj, 'baz.bar.foo'), 'quux')
+})
+
+test('export.split', t => {
+    const wrapper = path => defaultSplit(path).reverse()
+    const get = getter({ split: wrapper })
     const obj = { foo: { bar: { baz: 'quux' } } }
 
     t.is(get(obj, 'baz.bar.foo'), 'quux')
@@ -238,16 +247,6 @@ test('option.default', t => {
     ])
 })
 
-test('option.parser', t => {
-    const parser = path => path.split('.')
-    const get1 = getter({ parser })
-    const get2 = getter({ parser: '.' })
-    const obj = { '': { '': 42 } }
-
-    t.is(get1(obj, '.'), 42)
-    t.is(get2(obj, '.'), 42)
-})
-
 test('option.flatMap', t => {
     const get1 = getter({ flatMap: '*', map: false })
     const get2 = getter({ flatMap: SYMBOL, map: false })
@@ -321,6 +320,26 @@ test('option.flatMap = false', t => {
     t.deepEqual(get(obj, ['foo', '*', 'baz', 'quux'], 42), 42)
     t.deepEqual(get(obj, 'foo.bar.*'), 'quux')
     t.deepEqual(get(obj, ['foo', 'bar', '*']), 'quux')
+})
+
+test('option.parser', t => {
+    const parser = path => path.split('.')
+    const get1 = getter({ parser })
+    const get2 = getter({ parser: '.' })
+    const obj = { '': { '': 42 } }
+
+    t.is(get1(obj, '.'), 42)
+    t.is(get2(obj, '.'), 42)
+})
+
+test('option.split', t => {
+    const split = path => path.split('.')
+    const get1 = getter({ split })
+    const get2 = getter({ split: '.' })
+    const obj = { '': { '': 42 } }
+
+    t.is(get1(obj, '.'), 42)
+    t.is(get2(obj, '.'), 42)
 })
 
 test('option.map', t => {

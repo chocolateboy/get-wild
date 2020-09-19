@@ -18,13 +18,13 @@
 - [EXPORTS](#exports)
   - [get](#get)
   - [getter](#getter)
-  - [parser](#parser)
+  - [split](#split)
 - [OPTIONS](#options)
   - [collect](#collect)
   - [default](#default)
   - [flatMap](#flatmap)
   - [map](#map)
-  - [parser](#parser-1)
+  - [split](#split-1)
 - [DEVELOPMENT](#development)
 - [COMPATIBILITY](#compatibility)
 - [SEE ALSO](#see-also)
@@ -176,7 +176,8 @@ type Options = {
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
-    parser?: string | ((path: string) => Array<PropertyKey>);
+    parser?: Options['split'];
+    split?: string | ((path: string) => Array<PropertyKey>);
 };
 
 type Path = PropertyKey | Array<PropertyKey>;
@@ -228,8 +229,8 @@ can be used to create a custom `get` function with different options.
 ```javascript
 import { getter } from 'get-wild'
 
-const parser = path => path.split('.')
-const get = getter({ parser })
+const split = path => path.split('.')
+const get = getter({ split })
 const obj = { '': { '': 42 } }
 
 get(obj, '.') // 42
@@ -245,7 +246,7 @@ following default [options](#options):
         default: undefined,
         flatMap: '*',
         map: '**',
-        parser: defaultParser,
+        split: defaultParser,
     }
 ```
 
@@ -255,32 +256,32 @@ overrides these defaults, e.g.:
 ```javascript
 import { getter } from 'get-wild'
 
-const parser = path => path.split('/')
-const get = getter({ parser })
+const split = path => path.split('/')
+const get = getter({ split })
 
 get(obj, 'foo/bar/*/quux')
 ```
 
-## parser
+## split
 
 - **Type**: `(path: string) ⇒ Array<PropertyKey>`
+- **Alias**: parser
 
 ```javascript
-import { getter, parser } from 'get-wild'
+import { getter, split } from 'get-wild'
 import memoize from '@example/memoizer'
 
-const memoized = memoize(parser)
-const get = getter({ parser: memoized })
+const memoized = memoize(split)
+const get = getter({ split: memoized })
 
 get(obj, '...')
 ```
 
-The default parser used by [`get`](#get) to turn a path expression into an
-array of steps (strings, symbols and numbers).
+The default function used by [`get`](#get) to turn a path expression into an
+array of steps (strings, symbols or numbers).
 
-The array of steps used inside the `get` function is not mutated, so, e.g., the
-parser can be memoized (or steps can be pre-parsed) to avoid re-parsing
-long/frequently-used paths.
+The array is not mutated, so, e.g., the function can be memoized (or the path
+can pre-parsed) to avoid re-parsing long/frequently-used paths.
 
 <!-- TOC:ignore -->
 ### Syntax <a name="path-syntax"></a>
@@ -289,7 +290,7 @@ The parser supports an extended version of JavaScript's native path syntax,
 e.g. the path:
 
 ```javascript
-a[-1].b[42]["c.d"].e['f g'].*.h["i \\"j\\" k"][""]
+`a[-1].b[42]["c.d"].e['f g'].*.h["i \\"j\\" k"][""]`
 ```
 
 is parsed into the following steps:
@@ -424,7 +425,7 @@ get(data, 'accounts.active.*.followers.*.name', [])
 <!-- TOC:ignore -->
 ### Syntax
 
-Note that with the [default parser](#parser), the token must be a
+Note that with the [default parser](#split), the token must be a
 [syntactically-valid](#path-syntax) name, e.g. this doesn't work:
 
 ```javascript
@@ -439,8 +440,8 @@ get(obj, 'foo.[].bar') // SyntaxError: Invalid step @ 3: "foo.[].bar"
 If a custom parser is supplied, any token can be used:
 
 ```javascript
-const parser = path => path.split('.')
-const get = getter({ flatMap: '[]', parser })
+const split = path => path.split('.')
+const get = getter({ flatMap: '[]', split })
 
 get(obj, 'foo.[].bar') // [1, 2]
 ```
@@ -468,15 +469,16 @@ layer of wrapping.
 If set to false, wildcard matching with `map` is disabled and the token is
 treated as a regular property name.
 
-## parser
+## split
 
 - **Type**: `string | ((path: string) ⇒ Array<PropertyKey>)`
+- **Alias**: parser
 
 ```javascript
 import { getter } from  'get-wild'
 
-const parser = path => path.split('.')
-const get = getter({ parser })
+const split = path => path.split('.')
+const get = getter({ split })
 const obj = { '': { '': 42 } }
 
 get(obj, '.') // 42
@@ -484,19 +486,19 @@ get(obj, '.') // 42
 
 A function which takes a path expression (string) and parses it into an array
 of property names (strings, symbols or numbers). If not supplied, a
-[default parser](#parser) is used which supports an extended version of
-JavaScript's native path [syntax](#path-syntax).
+[default parser](#split) which supports an extended version of JavaScript's
+native path [syntax](#path-syntax) is used.
 
 As a shortcut, if the value is a string, a function which splits the path on
 that string is used, i.e. the following are equivalent:
 
 ```javascript
-const parser = path => path.split('.')
-const get = getter({ parser })
+const split = path => path.split('.')
+const get = getter({ split })
 ```
 
 ```javascript
-const get = getter({ parser: '.' })
+const get = getter({ split: '.' })
 ```
 
 # DEVELOPMENT

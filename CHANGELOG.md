@@ -1,3 +1,8 @@
+## 1.2.0 - TBD
+
+- add `exports.split` as an alias for `exports.parser`
+- add `options.split` as an alias for `options.parser`
+
 ## 1.1.0 - 2020-09-19
 
 - allow `parser` to accept a string as a shortcut for `path => path.split(string)`
