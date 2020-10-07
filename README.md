@@ -154,7 +154,7 @@ builder function ([`getter`](#getter)) which can be used to create a custom
 
 ## Why?
 
-I needed a small, dependency-free version of `Lodash.get` with wildcard
+I needed a small, dependency-free version of [`Lodash.get`][Lodash.get] with wildcard
 support, and preferably with an option to filter out/exclude missing values.
 Although there are a huge number of `get` implementations on NPM, I could only
 find one or two with wildcard support and none that are
@@ -164,7 +164,7 @@ standalone/dependency-free.
 
 If you don't need support for wildcards, negative array-indices, or other
 [options](#options), there are smaller implementations, e.g.
-[just-safe-get](https://www.npmjs.com/package/just-safe-get).
+[dlv](https://www.npmjs.com/package/dlv).
 
 # TYPES
 
@@ -531,8 +531,6 @@ The following NPM scripts are available:
 # SEE ALSO
 
 - [dot-wild-tiny](https://www.npmjs.com/package/dot-wild-tiny)
-- [just-safe-get](https://www.npmjs.com/package/just-safe-get)
-- [lodash.get](https://www.npmjs.com/package/lodash.get)
 - [object-path-wild](https://www.npmjs.com/package/object-path-wild)
 - [@gizt/selector](https://www.npmjs.com/package/@gizt/selector)
 
@@ -555,6 +553,7 @@ terms of the [Artistic License 2.0](https://www.opensource.org/licenses/artistic
 [flatMap]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap
 [globs]: https://en.wikipedia.org/wiki/Glob_(programming)
 [jsDelivr]: https://cdn.jsdelivr.net/npm/get-wild@1.2.0/dist/index.umd.min.js
+[Lodash.get]: https://www.npmjs.com/package/lodash.get
 [map]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
 [Object.values]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
 [unpkg]: https://unpkg.com/get-wild@1.2.0/dist/index.umd.min.js
