@@ -281,7 +281,8 @@ The default function used by [`get`](#get) to turn a path expression into an
 array of steps (strings, symbols or numbers).
 
 The array is not mutated, so, e.g., the function can be memoized (or the path
-can pre-parsed) to avoid re-parsing long/frequently-used paths.
+can be pre-parsed into an array) to avoid re-parsing long/frequently-used
+paths.
 
 <!-- TOC:ignore -->
 ### Syntax <a name="path-syntax"></a>
