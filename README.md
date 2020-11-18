@@ -172,7 +172,7 @@ The following types are referenced in the descriptions below.
 
 ```typescript
 type Options = {
-    collect?: (value: {}) ⇒ Array<any>;
+    collect?: (value: {}) => Array<any>;
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
@@ -345,7 +345,7 @@ get(obj, 'map.*.value')
 The `collect` function is used to convert a value under a wildcard token into
 an array of values. If not supplied, it defaults to
 [`Object.values`][Object.values], which works with objects, arrays, and other
-non-nullish values. Can be overridden to add support for traversable values
+non-nullish values. It can be overridden to add support for traversable values
 that aren't plain objects, e.g. ES6 Map and Set instances.
 
 Note that the value passed to `collect` is not falsey and not an array, as both
