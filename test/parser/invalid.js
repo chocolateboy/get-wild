@@ -1,6 +1,6 @@
-const test              = require('ava')
-const { parser: parse } = require('../..')
-const INVALID           = require('./fixtures/_invalid.js')
+const test      = require('ava')
+const { parse } = require('../..')
+const INVALID   = require('./fixtures/_invalid.js')
 
 require('array-flat-polyfill') // for Node v10
 

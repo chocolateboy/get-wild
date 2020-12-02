@@ -1,3 +1,9 @@
+## 1.3.0 - TBD
+
+- add curried (data last) versions of `get` and `getter` via `get-wild/fp`
+- types: narrow `get`'s return type from `any` to `unknown`
+- add `exports.parse` as an alias for `exports.parser`
+
 ## 1.2.0 - 2020-09-19
 
 - add `exports.split` as an alias for `exports.parser`

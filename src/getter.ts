@@ -37,7 +37,7 @@ export const getter = (options: Options = {}) => {
         ? (path: string) => path.split(split)
         : split
 
-    return (obj: any, path: Path, $default = $$default): any => {
+    return (obj: any, path: Path, ...rest: [] | [any]): unknown => {
         let props: ReadonlyArray<PropertyKey>
 
         switch (typeof path) {
@@ -58,6 +58,7 @@ export const getter = (options: Options = {}) => {
                 }
         }
 
+        const $default = rest.length ? rest[0] : $$default
         const lastIndex = props.length - 1
 
         for (let i = 0; i <= lastIndex; ++i) {
