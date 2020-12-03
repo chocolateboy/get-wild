@@ -37,7 +37,10 @@ export const getter = (options: Options = {}) => {
         ? (path: string) => path.split(split)
         : split
 
-    return (obj: any, path: Path, ...rest: [] | [any]): unknown => {
+    // XXX the name is important; if omitted, `get` refers to the default `get`
+    // export defined at the bottom of the file rather than this `get`, which
+    // may have different options
+    return function get (obj: any, path: Path, ...rest: [] | [any]): unknown {
         let props: ReadonlyArray<PropertyKey>
 
         switch (typeof path) {

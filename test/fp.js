@@ -6,6 +6,8 @@ const {
     split: defaultSplit
 } = require('..')
 
+require('array-flat-polyfill') // for Node v10
+
 const array = [
     [{ value: 1 }, { value: 2 }, { value: 3 }],
     [{ value: 4 }, { value: 5 }, { value: 6 }],
@@ -43,7 +45,9 @@ test('fp/get', t => {
         'Nemo'
     ])
 
-    t.deepEqual(get('users.*.hobbies')(data), [
+    const get1 = get('users.*.hobbies')
+
+    t.deepEqual(get1(data), [
         'eating',
         'sleeping',
         undefined,
@@ -58,7 +62,7 @@ test('fp/get', t => {
         'dancing'
     ])
 
-    t.deepEqual(get('users.*.hobbies')(data, []), [
+    t.deepEqual(get1(data, []), [
         'eating',
         'sleeping',
         'singing',
@@ -73,15 +77,7 @@ test('fp/get', t => {
         'dancing'
     ])
 
-    t.deepEqual(get('users.*.hobbies')(data, 'bar'), [
-        'eating',
-        'sleeping',
-        'bar',
-        'singing',
-        'dancing'
-    ])
-
-    t.deepEqual(get('users.*.hobbies')(data, 'bar'), [
+    t.deepEqual(get1(data, 'bar'), [
         'eating',
         'sleeping',
         'bar',
@@ -91,9 +87,10 @@ test('fp/get', t => {
 })
 
 test('fp/getter - default options', t => {
-    const get = getter()
+    const get1 = getter()
+    const get2 = getter()('users.*.hobbies')
 
-    t.deepEqual(get('users.*.hobbies')(data), [
+    t.deepEqual(get2(data), [
         'eating',
         'sleeping',
         undefined,
@@ -101,14 +98,14 @@ test('fp/getter - default options', t => {
         'dancing'
     ])
 
-    t.deepEqual(get('users.*.hobbies', [])(data), [
+    t.deepEqual(get1('users.*.hobbies', [])(data), [
         'eating',
         'sleeping',
         'singing',
         'dancing'
     ])
 
-    t.deepEqual(get('users.*.hobbies')(data, []), [
+    t.deepEqual(get2(data, []), [
         'eating',
         'sleeping',
         'singing',
@@ -117,24 +114,17 @@ test('fp/getter - default options', t => {
 })
 
 test('fp/getter - custom options', t => {
-    const get = getter({ default: [] })
+    const get1 = getter({ default: [] })
+    const get2 = get1('users.*.hobbies')
 
-    t.deepEqual(get('users.*.hobbies')(data), [
+    t.deepEqual(get2(data), [
         'eating',
         'sleeping',
         'singing',
         'dancing'
     ])
 
-    t.deepEqual(get('users.*.hobbies', undefined)(data), [
-        'eating',
-        'sleeping',
-        undefined,
-        'singing',
-        'dancing'
-    ])
-
-    t.deepEqual(get('users.*.hobbies')(data, undefined), [
+    t.deepEqual(get1('users.*.hobbies', undefined)(data), [
         'eating',
         'sleeping',
         undefined,
@@ -142,7 +132,15 @@ test('fp/getter - custom options', t => {
         'dancing'
     ])
 
-    t.deepEqual(get('users.*.hobbies', 'foo')(data), [
+    t.deepEqual(get2(data, undefined), [
+        'eating',
+        'sleeping',
+        undefined,
+        'singing',
+        'dancing'
+    ])
+
+    t.deepEqual(get1('users.*.hobbies', 'foo')(data), [
         'eating',
         'sleeping',
         'foo',
@@ -150,7 +148,7 @@ test('fp/getter - custom options', t => {
         'dancing'
     ])
 
-    t.deepEqual(get('users.*.hobbies')(data, 'bar'), [
+    t.deepEqual(get2(data, 'bar'), [
         'eating',
         'sleeping',
         'bar',
@@ -158,10 +156,10 @@ test('fp/getter - custom options', t => {
         'dancing'
     ])
 
-    t.deepEqual(get('users.*.hobbies', 'foo')(data, 'bar'), [
+    t.deepEqual(get1('users.*.hobbies', 'foo')(data, 'baz'), [
         'eating',
         'sleeping',
-        'bar',
+        'baz',
         'singing',
         'dancing'
     ])

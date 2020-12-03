@@ -13,6 +13,8 @@ function node (key, value) {
     return { foo: { bar: { [key]: value } } }
 }
 
+const DEEP_JSON = require('./fixtures/deep.json')
+const DEEP_SETS = require('./fixtures/deep.js')
 const SYMBOL = Symbol('symbol')
 const NODE = node('baz', 'quux')
 
@@ -491,4 +493,38 @@ test('wildcard', t => {
 
     // TODO confirm deep wildcard matching works, i.e. multiple wildcards:
     // "foo.*.bar.*.baz"
+})
+
+// XXX the tests above don't involve deeply nested objects, which hid a bug
+// (recursive `get` calls were made to the default `get` rather than a custom
+// `get`). this object isn't deep by real-world standards but it's deep enough
+// to verify that the bug has been fixed
+
+test('recursion', t => {
+    const path1 = 'a.*.b.*.c.*.d.*.e.*.f.*.g'
+    const path2 = 'a.+.b.+.c.+.d.+.e.+.f.+.g'
+    const path3 = 'a.[].b.[].c.[].d.[].e.[].f.[].g'
+
+    const get1 = getter()
+    const get2 = getter({ flatMap: '+' })
+    const get3 = getter({ map: '[]', split: '.' })
+
+    t.snapshot(get(DEEP_JSON, path1), 'default-flat-map (1)')
+    t.snapshot(get1(DEEP_JSON, path1), 'default-flat-map (2)')
+    t.snapshot(get2(DEEP_JSON, path2), 'custom-flat-map')
+    t.snapshot(get3(DEEP_JSON, path3), 'custom-map')
+
+    let count = 0
+
+    // traverse a tree of Sets rather than the JSON tree because arrays are
+    // handled without calling `collect`
+    const collect = value => {
+        ++count
+        return Array.from(value.values()).reverse()
+    }
+
+    const get4 = getter({ collect })
+
+    t.snapshot(get4(DEEP_SETS, path1), 'custom-collect')
+    t.is(count, 63)
 })

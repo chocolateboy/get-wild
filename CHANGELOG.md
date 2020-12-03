@@ -1,8 +1,18 @@
 ## 1.3.0 - TBD
 
+### Features
+
 - add curried (data last) versions of `get` and `getter` via `get-wild/fp`
-- types: narrow `get`'s return type from `any` to `unknown`
 - add `exports.parse` as an alias for `exports.parser`
+
+### Fixes
+
+- fix a bug which caused custom `collect`, `map` and `flatMap` settings to be
+  forgotten after the first wildcard match
+
+### Changes
+
+- types: narrow `get`'s return type from `any` to `unknown`
 
 ## 1.2.0 - 2020-09-19
 
