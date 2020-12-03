@@ -1,6 +1,6 @@
 # get-wild
 
-[![Build Status](https://travis-ci.org/chocolateboy/get-wild.svg)](https://travis-ci.org/chocolateboy/get-wild)
+[![Build Status](https://github.com/chocolateboy/get-wild/workflows/test/badge.svg)](https://github.com/chocolateboy/get-wild/actions?query=workflow%3Atest)
 [![NPM Version](https://img.shields.io/npm/v/get-wild.svg)](https://www.npmjs.org/package/get-wild)
 
 <!-- TOC -->
