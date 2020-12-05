@@ -1,5 +1,6 @@
 export {
     Options,
+    Parser,
     Path,
     get,
     getter,

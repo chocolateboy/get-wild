@@ -8,9 +8,8 @@ declare type Options = {
 };
 declare type Parser = (path: string) => Array<PropertyKey>;
 declare type Path = PropertyKey | Array<PropertyKey>;
-declare const getter: (options?: Options) => (obj: any, path: Path, ...rest: [] | [any]) => unknown;
-declare const get: (obj: any, path: Path, ...rest: [] | [any]) => unknown;
 
-declare const parser: (path: string) => (string | number)[];
+declare const get: (path: Path, ...rest: [] | [any]) => (obj: any, ...rest: [] | [any]) => unknown;
+declare const getter: (options?: Options) => (path: Path, ...rest: [] | [any]) => (obj: any, ...rest: [] | [any]) => unknown;
 
-export { Options, Parser, Path, get, getter, parser as parse, parser, parser as split };
+export { get, getter };

@@ -6,7 +6,17 @@ const config = [
         output: [
             {
                 file: './index.d.ts',
-                format: 'es'
+                format: 'es',
+            }
+        ],
+        plugins: [dts()],
+    },
+    {
+        input: './dist/fp.d.ts',
+        output: [
+            {
+                file: './fp.d.ts',
+                format: 'es',
             }
         ],
         plugins: [dts()],

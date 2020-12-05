@@ -32,7 +32,7 @@ const data = {
     }
 }
 
-test('fp/get', t => {
+test('get', t => {
     t.is(get('[1][-2].value')(array), 5)
     t.is(get([-1, -1, 'value'])(array), 9)
 
@@ -86,7 +86,7 @@ test('fp/get', t => {
     ])
 })
 
-test('fp/getter - default options', t => {
+test('getter - default options', t => {
     const get1 = getter()
     const get2 = getter()('users.*.hobbies')
 
@@ -113,7 +113,7 @@ test('fp/getter - default options', t => {
     ])
 })
 
-test('fp/getter - custom options', t => {
+test('getter - custom options', t => {
     const get1 = getter({ default: [] })
     const get2 = get1('users.*.hobbies')
 
@@ -163,4 +163,27 @@ test('fp/getter - custom options', t => {
         'singing',
         'dancing'
     ])
+})
+
+// confirm the path is pre-parsed
+test('pre-parsed', t => {
+    let called = 0
+
+    const split = path => {
+        ++called
+        return path.split('/')
+    }
+
+    const get = getter({ split, default: [] })('users/*/hobbies')
+
+    for (let i = 0; i < 10; ++i) {
+        t.deepEqual(get(data), [
+            'eating',
+            'sleeping',
+            'singing',
+            'dancing'
+        ])
+    }
+
+    t.is(called, 1)
 })

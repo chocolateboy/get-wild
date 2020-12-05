@@ -179,9 +179,10 @@ type Options = {
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
     parser?: Options['split'];
-    split?: string | ((path: string) => Array<PropertyKey>);
+    split?: string | Parser;
 };
 
+type Parser = (path: string) => Array<PropertyKey>;
 type Path = PropertyKey | Array<PropertyKey>;
 ```
 
@@ -204,7 +205,7 @@ type Path = PropertyKey | Array<PropertyKey>;
     ```javascript
     import { get } from 'get-wild/fp'
 
-    const followers = get('followers.*.name', [])
+    const followers = get('users.*.followers.*.name', [])
 
     users.map(followers)           // equivalent to users.map(user => get(user, path, []))
     users.map(followers, '<anon>') // override the default value
@@ -263,7 +264,7 @@ can be used to create a custom `get` function with different options.
     import { getter } from 'get-wild/fp'
 
     const get = getter({ default: [], split: '.' })
-    const followers = get('followers.*.name')
+    const followers = get('users.*.followers.*.name')
 
     users.map(followers)           // equivalent to users.map(user => get(user, path, []))
     users.map(followers, '<anon>') // override the default value
@@ -301,7 +302,7 @@ in.
 
 ## split
 
-- **Type**: `(path: string) => Array<PropertyKey>`
+- **Type**: `Parser`
 - **Aliases**: parse, parser
 
 ```javascript
@@ -317,9 +318,10 @@ get(obj, '...')
 The default function used by [`get`](#get) to turn a path expression into an
 array of steps (strings, symbols or numbers).
 
-The array is not mutated, so, e.g., the function can be memoized (or the path
-can be pre-parsed into an array) to avoid re-parsing long/frequently-used
-paths.
+The array is not mutated, so, e.g., the function can be memoized to avoid
+re-parsing long/frequently-used paths. Alternatively, the path can be
+pre-parsed into an array (this is done automatically if the curried versions
+are used).
 
 <!-- TOC:ignore -->
 ### Syntax <a name="path-syntax"></a>
@@ -358,11 +360,9 @@ If the path is an empty string, an empty array is returned.
 import { getter } from 'get-wild'
 
 const collect = value => {
-    if (value instanceof Map || value instanceof Set) {
-        return Array.from(value.values())
-    } else {
-        return Object.values(value)
-    }
+    return (value instanceof Map || value instanceof Set)
+        ? Array.from(value.values())
+        : Object.values(value)
 }
 
 const map = new Map([
@@ -478,8 +478,7 @@ get(obj, 'foo.[].bar') // SyntaxError: Invalid step @ 3: "foo.[].bar"
 If a custom parser is supplied, any token can be used:
 
 ```javascript
-const split = path => path.split('.')
-const get = getter({ flatMap: '[]', split })
+const get = getter({ flatMap: '[]', split: '.' })
 
 get(obj, 'foo.[].bar') // [1, 2]
 ```
@@ -509,7 +508,7 @@ treated as a regular property name.
 
 ## split
 
-- **Type**: `string | ((path: string) => Array<PropertyKey>)`
+- **Type**: `string | Parser`
 - **Alias**: parser
 
 ```javascript

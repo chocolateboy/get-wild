@@ -6,24 +6,25 @@ export type Options = {
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
     parser?: Options['split'];
-    split?: string | ((path: string) => Array<PropertyKey>);
+    split?: string | Parser;
 };
 
+export type Parser = (path: string) => Array<PropertyKey>;
 export type Path = PropertyKey | Array<PropertyKey>;
 
 type Dict = Record<PropertyKey, any>;
 
 // minification helpers
 const { isArray } = Array
-const $Object = Object
+const { defineProperty, values: defaultCollect } = Object
 const $Symbol = Symbol
 
 const NO_MAP = $Symbol()
 const NO_FLAT_MAP = $Symbol()
 
-export const getter = (options: Options = {}) => {
+export const getter = (options: Options = {}): typeof get => {
     const {
-        collect = $Object.values,
+        collect = defaultCollect,
         default: $$default,
         flatMap: $flatMap = '*',
         map: $map = '**',
@@ -40,7 +41,7 @@ export const getter = (options: Options = {}) => {
     // XXX the name is important; if omitted, `get` refers to the default `get`
     // export defined at the bottom of the file rather than this `get`, which
     // may have different options
-    return function get (obj: any, path: Path, ...rest: [] | [any]): unknown {
+    function get (obj: any, path: Path, ...rest: [] | [any]): unknown {
         let props: ReadonlyArray<PropertyKey>
 
         switch (typeof path) {
@@ -105,6 +106,11 @@ export const getter = (options: Options = {}) => {
 
         return obj === undefined ? $default : obj
     }
+
+    // expose the selected/generated parser as a (read-only) property on the
+    // function. this is for the currying wrapper and isn't exposed by the
+    // curried functions
+    return defineProperty(get, 'parse', { value: parse })
 }
 
 export const get = getter()
