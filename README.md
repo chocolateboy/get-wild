@@ -573,7 +573,7 @@ The following NPM scripts are available:
 
 # VERSION
 
-1.2.0
+1.3.0
 
 # AUTHOR
 
@@ -590,9 +590,9 @@ terms of the [Artistic License 2.0](https://www.opensource.org/licenses/artistic
 [flat]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
 [flatMap]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap
 [globs]: https://en.wikipedia.org/wiki/Glob_(programming)
-[jsDelivr]: https://cdn.jsdelivr.net/npm/get-wild@1.2.0/dist/index.umd.min.js
+[jsDelivr]: https://cdn.jsdelivr.net/npm/get-wild
 [Lodash.get]: https://www.npmjs.com/package/lodash.get
 [map]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
 [Object.values]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values
 [polyfill]: https://www.npmjs.com/package/array-flat-polyfill
-[unpkg]: https://unpkg.com/get-wild@1.2.0/dist/index.umd.min.js
+[unpkg]: https://unpkg.com/get-wild
