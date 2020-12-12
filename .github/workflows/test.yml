@@ -31,6 +31,7 @@ jobs:
       - name: install
         uses: bahmutov/npm-install@v1
         with:
+          useLockFile: false
           install-command: yarn install --verbose --prefer-offline --no-lockfile
 
       - name: test
