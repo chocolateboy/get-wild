@@ -23,15 +23,13 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: set up Node.js ${{ matrix.node-version }}
+      - name: set up node v${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: install
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+        run: yarn install --prefer-offline
 
       - name: test
         run: yarn test
