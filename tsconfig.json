@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
+        "allowJs": true,
         "allowSyntheticDefaultImports": true,
         "alwaysStrict": true,
         "baseUrl": "./",
+        "checkJs": true,
         "declarationMap": false,
         "declaration": true,
         "downlevelIteration": true,
@@ -15,8 +17,8 @@
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "outDir": "dist",
         "resolveJsonModule": true,
         "removeComments": false,

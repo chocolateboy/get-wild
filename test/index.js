@@ -162,86 +162,52 @@ test('option.collect', t => {
 })
 
 test('option.default', t => {
-    const path1 = ['nodes', '*', 'foo', 'bar', 'baz']
-    const path2 = ['nodes', '**', 'foo', 'bar', 'baz']
+    const path = 'nodes.*.foo.bar.baz'
     const get1 = getter({ default: undefined })
     const get2 = getter({ default: 42 })
     const get3 = getter({ default: [] })
 
-    t.deepEqual(get1(TREE, 'nodes.*.foo.bar.baz'), [
+    t.deepEqual(get1(TREE, path), [
         'quux1',
         undefined,
         'quux2',
         undefined,
     ])
 
-    t.deepEqual(get2(TREE, 'nodes.*.foo.bar.baz'), [
+    t.deepEqual(get1(TREE, path, 'override'), [
+        'quux1',
+        'override',
+        'quux2',
+        'override',
+    ])
+
+    t.deepEqual(get2(TREE, path), [
         'quux1',
         42,
         'quux2',
         42,
     ])
 
-    t.deepEqual(get3(TREE, 'nodes.*.foo.bar.baz'), [
+    t.deepEqual(get2(TREE, path, 'override'), [
+        'quux1',
+        'override',
+        'quux2',
+        'override',
+    ])
+
+    t.deepEqual(get3(TREE, path), [
         'quux1',
         'quux2',
     ])
 
-    t.deepEqual(get1(TREE, 'nodes.**.foo.bar.baz'), [
+    t.deepEqual(get3(TREE, path, 'override'), [
         'quux1',
-        undefined,
+        'override',
         'quux2',
-        undefined,
-    ])
-
-    t.deepEqual(get2(TREE, 'nodes.**.foo.bar.baz'), [
-        'quux1',
-        42,
-        'quux2',
-        42,
+        'override',
     ])
 
     t.deepEqual(get3(TREE, 'nodes.**.foo.bar.baz'), [
-        'quux1',
-        [],
-        'quux2',
-        [],
-    ])
-
-    t.deepEqual(get1(TREE, path1), [
-        'quux1',
-        undefined,
-        'quux2',
-        undefined,
-    ])
-
-    t.deepEqual(get2(TREE, path1), [
-        'quux1',
-        42,
-        'quux2',
-        42,
-    ])
-
-    t.deepEqual(get3(TREE, path1), [
-        'quux1',
-        'quux2',
-    ])
-
-    t.deepEqual(get1(TREE, path2), [
-        'quux1',
-        undefined,
-        'quux2',
-        undefined,
-    ])
-
-    t.deepEqual(get2(TREE, path2), [
-        'quux1',
-        42,
-        'quux2',
-        42,
-    ])
-
-    t.deepEqual(get3(TREE, path2), [
         'quux1',
         [],
         'quux2',
@@ -490,9 +456,6 @@ test('wildcard', t => {
 
     t.deepEqual(get(obj3, '**.value.**'), [['bar'], ['baz'], ['quux']])
     t.deepEqual(get(obj3, '*.value.*'), ['bar', 'baz', 'quux'])
-
-    // TODO confirm deep wildcard matching works, i.e. multiple wildcards:
-    // "foo.*.bar.*.baz"
 })
 
 // XXX the tests above don't involve deeply nested objects, which hid a bug

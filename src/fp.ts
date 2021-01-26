@@ -6,33 +6,38 @@ import {
     Path
 } from '.'
 
-type Get = typeof baseGet;
-type GetWithParse = Get & { parse: Parser };
+type BaseGet = typeof baseGet;
+type Get = (path: Path, $default?: any) => (value: any, $default?: any) => unknown;
+type GetWithParse = BaseGet & { parse: Parser };
+type Pluck = (path: Path, $default?: any) => (value: any) => unknown;
 
-const _get = (fn: Get, path: Path, rest: [] | [any]) => {
-    const parsed = typeof path === 'string'
-        ? (fn as GetWithParse).parse(path)
-        : path
+const parse = (path: Path, get: BaseGet) => {
+    return typeof path === 'string' ? (get as GetWithParse).parse(path) : path
+}
 
-    if (rest.length) {
-        const [$$default] = rest
+const _get = (get: BaseGet, $$$default?: any): Get => {
+    return (_path, ...rest) => {
+        const path = parse(_path, get)
+        const $$default = rest.length ? rest[0] : $$$default
 
-        return (obj: any, ...rest: [] | [any]): unknown => {
+        return (value, ...rest) => {
             const $default = rest.length ? rest[0] : $$default
-            return fn(obj, parsed, $default)
-        }
-    } else {
-        return (obj: any, ...rest: [] | [any]): unknown => {
-            return fn(obj, parsed, ...rest)
+            return get(value, path, $default)
         }
     }
 }
 
-const curry = (fn: Get) => {
-    return (path: Path, ...rest: [] | [any]) => _get(fn, path, rest)
+const _pluck = (get: BaseGet, $$default?: any): Pluck => {
+    return (_path, ...rest) => {
+        const path = parse(_path, get)
+        const $default = rest.length ? rest[0] : $$default
+        return value => get(value, path, $default)
+    }
 }
 
-const get = curry(baseGet)
-const getter = (options: Options = {}) => curry(baseGetter(options))
+const get = _get(baseGet)
+const pluck = _pluck(baseGet)
+const getter = (options: Options = {}) => _get(baseGetter(options), options.default)
+const plucker = (options: Options = {}) => _pluck(baseGetter(options), options.default)
 
-export { get, getter }
+export { get, getter, pluck, plucker }

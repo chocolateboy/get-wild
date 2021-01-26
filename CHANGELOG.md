@@ -1,3 +1,16 @@
+## 1.4.0 - TBD
+
+### Features
+
+- get-wild/fp: add unary variants of `get` (`pluck`) and getter (`plucker`)
+- speed up path parsing: replace `String#replace` with `RegExp#exec` (~1.6
+  times faster)
+
+### Changes
+
+- use [package.exports](https://nodejs.org/api/packages.html#packages_package_entry_points)
+  to declare entries
+
 ## 1.3.0 - 2020-12-07
 
 ### Features

@@ -4,10 +4,19 @@ const TOKEN: RegExp = codegen.require('../resources/build.js')
 const ESCAPED = /\\(.)/g
 
 const parser = (path: string) => {
-    const steps: Array<string | number> = []
+    let steps: Array<string | number> = []
+    let result: RegExpExecArray | null
 
-    path.replace(TOKEN, (_match, quote, quoted, integer, _invalidBracket, name, _invalidToken, offset: number) => {
-        // console.warn({ path, _match, quote, quoted, integer, _invalidBracket, name, _invalidToken, offset })
+    while (result = TOKEN.exec(path)) {
+        let [
+            /* match */,
+            quote,
+            quoted,
+            integer,
+            /* invalid bracket */,
+            name,
+            /* invalid token */
+        ] = result
 
         let step
 
@@ -18,13 +27,17 @@ const parser = (path: string) => {
         } else if (name) {
             step = name
         } else { // invalid bracket or token
-            throw new SyntaxError(`Invalid step @ ${offset}: ${JSON.stringify(path)}`)
+            // TODO switch to String#matchAll when Node.js v10 is EOL
+            //
+            // XXX although String#matchAll is currently slower than RegExp#exec
+            // (but slightly faster than String#replace)
+            TOKEN.lastIndex = 0
+
+            throw new SyntaxError(`Invalid step @ ${result.index}: ${JSON.stringify(path)}`)
         }
 
         steps.push(step)
-
-        return ''
-    })
+    }
 
     return steps
 }

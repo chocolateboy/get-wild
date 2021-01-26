@@ -17,10 +17,9 @@ type Dict = Record<PropertyKey, any>;
 // minification helpers
 const { isArray } = Array
 const { defineProperty, values: defaultCollect } = Object
-const $Symbol = Symbol
 
-const NO_MAP = $Symbol()
-const NO_FLAT_MAP = $Symbol()
+const NO_MAP = Symbol()
+const NO_FLAT_MAP = Symbol()
 
 export const getter = (options: Options = {}): typeof get => {
     const {
@@ -71,31 +70,20 @@ export const getter = (options: Options = {}): typeof get => {
             }
 
             const prop = props[i]
+            const isFlatMap = prop === flatMap
 
-            if ((prop === flatMap) || (prop === map)) {
-                // Object.values is very forgiving and works with anything that
-                // can be turned into an object via Object(...), i.e. everything
-                // but undefined and null, which we've guarded against above.
+            if (isFlatMap || prop === map) {
                 const values = isArray(obj) ? obj : collect(obj)
 
                 if (i === lastIndex) {
-                    return prop === flatMap ? values.flat() : values
+                    return isFlatMap ? values.flat() : values
                 }
 
                 const newProps = props.slice(i + 1)
+                const recurse = <V>(value: V) => get(value, newProps, $default)
 
-                if (prop === flatMap) {
-                    return values.flatMap(<V>(value: V) => {
-                        return get(value, newProps, $default)
-                    })
-                } else {
-                    return values.map(<V>(value: V) => {
-                        return get(value, newProps, $default)
-                    })
-                }
-            }
-
-            if (isArray(obj) && Number.isInteger(<number>prop) && <number>prop < 0) {
+                return isFlatMap ? values.flatMap(recurse) : values.map(recurse)
+            } else if (isArray(obj) && Number.isInteger(<number>prop) && <number>prop < 0) {
                 obj = obj[obj.length + <number>prop]
             } else {
                 // XXX cast the symbol to a string to work around a TypeScript bug:
@@ -107,8 +95,8 @@ export const getter = (options: Options = {}): typeof get => {
         return obj === undefined ? $default : obj
     }
 
-    // expose the selected/generated parser as a (read-only) property on the
-    // function. this is for the currying wrapper and isn't exposed by the
+    // expose the supplied/generated parser as a (read-only) property on the
+    // function. this is for the currying wrappers and isn't exposed by the
     // curried functions
     return defineProperty(get, 'parse', { value: parse })
 }

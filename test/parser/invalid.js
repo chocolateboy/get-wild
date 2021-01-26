@@ -2,8 +2,6 @@ const test      = require('ava')
 const { parse } = require('../..')
 const INVALID   = require('./fixtures/_invalid.js')
 
-require('array-flat-polyfill') // for Node v10
-
 for (const path of INVALID) {
     const name = JSON.stringify(path)
 
