@@ -416,7 +416,7 @@ followers(user, '<anon>') // get(user, path, [])
 const allFollowers = users.flatMap(followers)
 ```
 
-A variant of [`getter`](#getter) which returns a [version of `pluck`](#pluck)
+A variant of [`getter`](#getter-fp) which returns a [version of `pluck`](#pluck)
 with the options baked in.
 
 This is useful in situations where additional arguments may be misinterpreted
