@@ -2,6 +2,7 @@ import size       from 'rollup-plugin-filesize'
 import { terser } from 'rollup-plugin-terser'
 import ts         from '@wessberg/rollup-plugin-ts'
 
+const isDevEnv = process.env.NODE_ENV !== 'production'
 const $size = size({ showMinifiedSize: false })
 
 const $ts = ts({
@@ -21,10 +22,8 @@ const $terser = terser({
     mangle: true,
 })
 
-const sourcemap = process.env.NODE_ENV !== 'production'
-
 const cjs = entry => {
-    const [external, plugins] = sourcemap
+    const [external, plugins] = isDevEnv
         ? [['source-map-support/register'], [$tsMap]]
         : [[], [$ts]]
 
@@ -35,12 +34,12 @@ const cjs = entry => {
         output: {
             file: `dist/${entry}.js`,
             format: 'cjs',
-            sourcemap,
+            sourcemap: isDevEnv,
         },
     }
 }
 
-const multi = entry => ({
+const release = entry => ({
     input: `src/${entry}.ts`,
     plugins: [$ts],
     output: [
@@ -69,9 +68,10 @@ const multi = entry => ({
     ]
 })
 
-export default [
-    cjs('index'),
-    cjs('fp'),
-    multi('index'),
-    multi('fp'),
-]
+const config = [cjs('index'), cjs('fp')]
+
+if (!isDevEnv) {
+    config.push(release('index'), release('fp'))
+}
+
+export default config
