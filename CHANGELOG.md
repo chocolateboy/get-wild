@@ -1,4 +1,4 @@
-## 1.4.1 - TBD
+## 1.4.1 - 2021-03-01
 
 - type fix: revert the `any` -> `unknown` change to avoid requiring casts
 
