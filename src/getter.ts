@@ -40,7 +40,7 @@ export const getter = (options: Options = {}): typeof get => {
     // XXX the name is important; if omitted, `get` refers to the default `get`
     // export defined at the bottom of the file rather than this `get`, which
     // may have different options
-    function get (obj: any, path: Path, ...rest: [] | [any]): unknown {
+    function get (obj: any, path: Path, ...rest: [] | [any]): any {
         let props: ReadonlyArray<PropertyKey>
 
         switch (typeof path) {

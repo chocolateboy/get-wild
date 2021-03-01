@@ -7,9 +7,9 @@ import {
 } from '.'
 
 type BaseGet = typeof baseGet;
-type Get = (path: Path, $default?: any) => (value: any, $default?: any) => unknown;
+type Get = (path: Path, $default?: any) => (value: any, $default?: any) => any;
 type GetWithParse = BaseGet & { parse: Parser };
-type Pluck = (path: Path, $default?: any) => (value: any) => unknown;
+type Pluck = (path: Path, $default?: any) => (value: any) => any;
 
 const parse = (path: Path, get: BaseGet) => {
     return typeof path === 'string' ? (get as GetWithParse).parse(path) : path

@@ -199,7 +199,7 @@ type Path = PropertyKey | Array<PropertyKey>;
 
 ### get
 
-- **Type**: `(obj: any, path: Path, $default?: any) => unknown`
+- **Type**: `(obj: any, path: Path, $default?: any) => any`
 
 ```javascript
 import { get } from 'get-wild'
@@ -236,7 +236,7 @@ can be used to create a custom `get` function with different options.
 
 ### getter
 
-- **Type**: `(options?: Options) => (obj: any, path: Path, $default?: any) => unknown`
+- **Type**: `(options?: Options) => (obj: any, path: Path, $default?: any) => any`
 
 ```javascript
 import { getter } from 'get-wild'
@@ -329,7 +329,7 @@ If the path is an empty string, an empty array is returned.
 <a name="get-fp"></a>
 ### get
 
-- **Type**: `(path: Path, $default?: any) => (obj: any, $default?: any) => unknown`
+- **Type**: `(path: Path, $default?: any) => (obj: any, $default?: any) => any`
 
 ```javascript
 import { get } from 'get-wild/fp'
@@ -355,7 +355,7 @@ does this automatically.
 <a name="getter-fp"></a>
 ### getter
 
-- **Type**: `(options?: Options) => (path: Path, $default?: any) => (obj: any, $default?: any) => unknown`
+- **Type**: `(options?: Options) => (path: Path, $default?: any) => (obj: any, $default?: any) => any`
 
 ```javascript
 import { getter } from 'get-wild/fp'
@@ -381,7 +381,7 @@ which does this automatically.
 
 ### pluck
 
-- **Type**: `(path: Path, $default?: any) => (obj: any) => unknown`
+- **Type**: `(path: Path, $default?: any) => (obj: any) => any`
 
 ```javascript
 import { pluck } from 'get-wild/fp'
@@ -402,7 +402,7 @@ or forbidden, e.g. when the generated function is passed to `map`.
 
 ### plucker
 
-- **Type**: `(options?: Options) => (path: Path, $default?: any) => (obj: any) => unknown`
+- **Type**: `(options?: Options) => (path: Path, $default?: any) => (obj: any) => any`
 
 ```javascript
 import { plucker } from 'get-wild/fp'
