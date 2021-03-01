@@ -2,17 +2,15 @@ import size       from 'rollup-plugin-filesize'
 import { terser } from 'rollup-plugin-terser'
 import ts         from '@wessberg/rollup-plugin-ts'
 
-const isDevEnv = process.env.NODE_ENV !== 'production'
+const isDev = process.env.NODE_ENV !== 'production'
+const external = isDev ? ['source-map-support/register'] : []
+
 const $size = size({ showMinifiedSize: false })
 
 const $ts = ts({
     transpiler: 'babel',
-})
-
-const $tsMap = ts({
-    transpiler: 'babel',
     babelConfig: {
-        plugins: ['source-map-support'],
+        plugins: isDev ? ['source-map-support'] : [],
     }
 })
 
@@ -22,22 +20,16 @@ const $terser = terser({
     mangle: true,
 })
 
-const cjs = entry => {
-    const [external, plugins] = isDevEnv
-        ? [['source-map-support/register'], [$tsMap]]
-        : [[], [$ts]]
-
-    return {
-        external,
-        input: `src/${entry}.ts`,
-        plugins,
-        output: {
-            file: `dist/${entry}.js`,
-            format: 'cjs',
-            sourcemap: isDevEnv,
-        },
-    }
-}
+const cjs = entry => ({
+    external,
+    input: `src/${entry}.ts`,
+    plugins: [$ts],
+    output: {
+        file: `dist/${entry}.js`,
+        format: 'cjs',
+        sourcemap: isDev,
+    },
+})
 
 const release = entry => ({
     input: `src/${entry}.ts`,
@@ -69,9 +61,6 @@ const release = entry => ({
 })
 
 const config = [cjs('index'), cjs('fp')]
-
-if (!isDevEnv) {
-    config.push(release('index'), release('fp'))
-}
+    .concat(isDev ? [] : [release('index'), release('fp')])
 
 export default config
