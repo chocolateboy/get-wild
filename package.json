@@ -9,7 +9,7 @@
     "types": "dist/index.d.ts",
     "repository": "https://github.com/chocolateboy/get-wild",
     "author": "chocolateboy",
-    "license": "Artistic-2.0",
+    "license": "MIT",
     "scripts": {
         "build": "rollup -c --exports auto",
         "build:doc": "toc-md README.md",
