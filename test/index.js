@@ -426,42 +426,98 @@ test('scalar', t => {
     t.deepEqual(get(TREE, [SYMBOL]), SYMBOL)
 })
 
-test('trailing wildcards', t => {
-    const tree = node('baz', ARRAY)
-
-    t.deepEqual(get(tree, 'foo.bar.baz.*'), ARRAY.flat())
-    t.deepEqual(get(tree, 'foo.bar.baz.**'), ARRAY)
-})
-
-// generic wildcard tests where we don't care about the flatMap/map distinction
-test('wildcard', t => {
+test('wildcards', t => {
     // confirm the example in the README works i.e. the wildcard extracts array
     // values
     t.deepEqual(get(ARRAY, '[1].*.value'), [4, 5, 6])
 
-    // leading wildcard
-    const obj2 = { a: { value: 'foo' }, b: { value: 'bar' }, c: { value: 'baz' } }
-    t.deepEqual(get(obj2, '*.value'), ['foo', 'bar', 'baz'])
-
-    // trailing wildcard
-    const obj1 = { root: { a: 'foo', b: 'bar', c: 'baz' } }
-    t.deepEqual(get(obj1, 'root.*'), ['foo', 'bar', 'baz'])
-
     // leading and trailing wildcards
-    const obj3 = {
+    const obj = {
         a: { value: { foo: 'bar' } },
         b: { value: { bar: 'baz' } },
         c: { value: { baz: 'quux' } }
     }
 
-    t.deepEqual(get(obj3, '**.value.**'), [['bar'], ['baz'], ['quux']])
-    t.deepEqual(get(obj3, '*.value.*'), ['bar', 'baz', 'quux'])
+    t.deepEqual(get(obj, '**.value.**'), [['bar'], ['baz'], ['quux']])
+    t.deepEqual(get(obj, '*.value.*'), ['bar', 'baz', 'quux'])
+
+    const arr = [
+        { a: 'foo', b: undefined, c: 'bar' },
+        { d: 'baz', e: undefined, f: 'quux' },
+    ]
+
+    // although written + read from left to right (which locates the
+    // terminals/leaves), the logic is best thought of (and implemented as — via
+    // recursion) a *pipeline* which takes leaves on the rhs and passes them up
+    // through the transformations to their left.
+    //
+    // a wildcard match always returns an array, so each rhs operation passes an
+    // array to the lhs and the lhs decides what to do with it (flatten it or
+    // return it verbatim)
+
+    // 1) do whatever the rhs says on each object then flatten the resulting
+    // arrays
+    t.deepEqual(get(arr, '*.*'), ['foo', undefined, 'bar', 'baz', undefined, 'quux'])
+    t.deepEqual(get(arr, '*.*', []), ['foo', 'bar', 'baz', 'quux'])
+    t.deepEqual(get(arr, '*.**'), ['foo', undefined, 'bar', 'baz', undefined, 'quux'])
+    t.deepEqual(get(arr, '*.**', []), ['foo', [], 'bar', 'baz', [], 'quux'])
+
+    // 2) do whatever the rhs says on each object and return the resulting
+    // arrays verbatim
+    t.deepEqual(get(arr, '**.*'), [['foo', undefined, 'bar'], ['baz', undefined, 'quux' ]])
+    t.deepEqual(get(arr, '**.*', []), [['foo', 'bar'], ['baz', 'quux']])
+    t.deepEqual(get(arr, '**.**'), [['foo', undefined, 'bar'], ['baz', undefined, 'quux']])
+    t.deepEqual(get(arr, '**.**', []), [['foo', [], 'bar'], ['baz', [], 'quux']])
+})
+
+test('leading wildcards', t => {
+    const arr = [{ value: 'foo' }, {}, { value: 'baz' }]
+    const obj = { a: { value: 'foo' }, b: {}, c: { value: 'baz' } }
+
+    t.deepEqual(get(arr, '*.value'), ['foo', undefined, 'baz'])
+    t.deepEqual(get(arr, '*.value', []), ['foo', 'baz'])
+    t.deepEqual(get(arr, '**.value'), ['foo', undefined, 'baz'])
+    t.deepEqual(get(arr, '**.value', []), ['foo', [], 'baz'])
+
+    t.deepEqual(get(obj, '*.value'), ['foo', undefined, 'baz'])
+    t.deepEqual(get(obj, '*.value', []), ['foo', 'baz'])
+    t.deepEqual(get(obj, '**.value'), ['foo', undefined, 'baz'])
+    t.deepEqual(get(obj, '**.value', []), ['foo', [], 'baz'])
+})
+
+test.only('trailing wildcards', t => {
+    const obj = { root: { a: 'foo', b: undefined, c: 'baz' } }
+    const tree = node('baz', ARRAY)
+
+    /*
+     * tree:
+     *
+     * {
+     *     "foo": {
+     *         "bar": {
+     *             "baz": [
+     *                 [{ "value": 1 }, { "value": 2 }, { "value": 3 }],
+     *                 [{ "value": 4 }, { "value": 5 }, { "value": 6 }],
+     *                 [{ "value": 7 }, { "value": 8 }, { "value": 9 }]
+     *             ]
+     *         }
+     *     }
+     * }
+     */
+
+    t.deepEqual(get(obj, 'root.*'), ['foo', undefined, 'baz'])
+    t.deepEqual(get(obj, 'root.*', []), ['foo', 'baz'])
+    t.deepEqual(get(obj, 'root.**'), ['foo', undefined, 'baz'])
+    t.deepEqual(get(obj, 'root.**', []), ['foo', [], 'baz'])
+
+    t.deepEqual(get(tree, 'foo.bar.baz.*'), ARRAY.flat())
+    t.deepEqual(get(tree, 'foo.bar.baz.**'), ARRAY)
 })
 
 // XXX the tests above don't involve deeply nested objects, which hid a bug
-// (recursive `get` calls were made to the default `get` rather than a custom
-// `get`). this object isn't deep by real-world standards but it's deep enough
-// to verify that the bug has been fixed
+// (recursive `get` calls were made to the default `get` rather than the
+// customized `get`). this object isn't deep by real-world standards but it's
+// deep enough to verify that the bug has been fixed
 
 test('recursion', t => {
     const path1 = 'a.*.b.*.c.*.d.*.e.*.f.*.g'

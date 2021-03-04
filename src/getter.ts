@@ -15,8 +15,8 @@ export type Path = PropertyKey | Array<PropertyKey>;
 type Dict = Record<PropertyKey, any>;
 
 // minification helpers
-const { isArray } = Array
-const { defineProperty, values: defaultCollect } = Object
+const { isArray: __isArray } = Array
+const { defineProperty: __defineProperty, values: defaultCollect } = Object
 
 const NO_MAP = Symbol()
 const NO_FLAT_MAP = Symbol()
@@ -54,7 +54,7 @@ export const getter = (options: Options = {}): typeof get => {
                 break
 
             default:
-                if (isArray(path)) {
+                if (__isArray(path)) {
                     props = path
                 } else {
                     throw new TypeError('Invalid path: expected a string, array, number, or symbol')
@@ -62,6 +62,7 @@ export const getter = (options: Options = {}): typeof get => {
         }
 
         const $default = rest.length ? rest[0] : $$default
+        const coalesce = <T>(it: T) => it === undefined ? $default : it
         const lastIndex = props.length - 1
 
         for (let i = 0; i <= lastIndex; ++i) {
@@ -73,18 +74,20 @@ export const getter = (options: Options = {}): typeof get => {
             const isFlatMap = prop === flatMap
 
             if (isFlatMap || prop === map) {
-                const values = isArray(obj) ? obj : collect(obj)
+                const values = __isArray(obj) ? obj : collect(obj)
+
+                let recurse
 
                 if (i === lastIndex) {
-                    return isFlatMap ? values.flat() : values
+                    recurse = coalesce // base case
+                } else {
+                    const newProps = props.slice(i + 1)
+                    recurse = <V>(value: V) => get(value, newProps, $default)
                 }
 
-                const newProps = props.slice(i + 1)
-                const recurse = <V>(value: V) => get(value, newProps, $default)
-
                 return isFlatMap ? values.flatMap(recurse) : values.map(recurse)
-            } else if (isArray(obj) && Number.isInteger(<number>prop) && <number>prop < 0) {
-                obj = obj[obj.length + <number>prop]
+            } else if (Number.isInteger(<number>prop) && __isArray(obj)) {
+                obj = obj[<number>prop < 0 ? obj.length + <number>prop : <number>prop]
             } else {
                 // XXX cast the symbol to a string to work around a TypeScript bug:
                 // https://github.com/microsoft/TypeScript/issues/1863
@@ -92,13 +95,13 @@ export const getter = (options: Options = {}): typeof get => {
             }
         }
 
-        return obj === undefined ? $default : obj
+        return coalesce(obj)
     }
 
     // expose the supplied/generated parser as a (read-only) property on the
     // function. this is for the currying wrappers and isn't exposed by the
     // curried functions
-    return defineProperty(get, 'parse', { value: parse })
+    return __defineProperty(get, 'parse', { value: parse })
 }
 
 export const get = getter()
