@@ -485,7 +485,7 @@ test('leading wildcards', t => {
     t.deepEqual(get(obj, '**.value', []), ['foo', [], 'baz'])
 })
 
-test.only('trailing wildcards', t => {
+test('trailing wildcards', t => {
     const obj = { root: { a: 'foo', b: undefined, c: 'baz' } }
     const tree = node('baz', ARRAY)
 
