@@ -1,4 +1,4 @@
-## 1.5.0 - TBD
+## 1.5.0 - 2021-03-04
 
 - fix coercion of undefined to the default value in trailing wildcards
 - relicense: Artistic 2.0 -> MIT

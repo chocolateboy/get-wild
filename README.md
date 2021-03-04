@@ -648,7 +648,7 @@ The following NPM scripts are available:
 
 # VERSION
 
-1.4.1
+1.5.0
 
 # AUTHOR
 

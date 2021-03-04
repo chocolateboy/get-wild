@@ -1,6 +1,6 @@
 {
     "name": "get-wild",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "description": "Pluck nested properties from an object with support for wildcards",
     "author": "chocolateboy",
     "repository": "https://github.com/chocolateboy/get-wild",
