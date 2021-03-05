@@ -455,14 +455,22 @@ test('wildcards', t => {
     // array to the lhs and the lhs decides what to do with it (flatten it or
     // return it verbatim)
 
-    // 1) do whatever the rhs says on each object then flatten the resulting
+    const values = ['foo', ['bar'], [], undefined, 'baz']
+
+    // 1) leading/trailing/only wildcard: map/flatMap the values
+    t.deepEqual(get(values, '*'), ['foo', 'bar', undefined, 'baz'])
+    t.deepEqual(get(values, '*', []), ['foo', 'bar', 'baz'])
+    t.deepEqual(get(values, '**'), ['foo', ['bar'], [], undefined, 'baz'])
+    t.deepEqual(get(values, '**', []), ['foo', ['bar'], [], [], 'baz'])
+
+    // 2) do whatever the rhs says on each object then flatten the resulting
     // arrays
     t.deepEqual(get(arr, '*.*'), ['foo', undefined, 'bar', 'baz', undefined, 'quux'])
     t.deepEqual(get(arr, '*.*', []), ['foo', 'bar', 'baz', 'quux'])
     t.deepEqual(get(arr, '*.**'), ['foo', undefined, 'bar', 'baz', undefined, 'quux'])
     t.deepEqual(get(arr, '*.**', []), ['foo', [], 'bar', 'baz', [], 'quux'])
 
-    // 2) do whatever the rhs says on each object and return the resulting
+    // 3) do whatever the rhs says on each object and return the resulting
     // arrays verbatim
     t.deepEqual(get(arr, '**.*'), [['foo', undefined, 'bar'], ['baz', undefined, 'quux' ]])
     t.deepEqual(get(arr, '**.*', []), [['foo', 'bar'], ['baz', 'quux']])
