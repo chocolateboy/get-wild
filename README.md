@@ -641,11 +641,11 @@ The following NPM scripts are available:
 
 # SEE ALSO
 
+- [@gizt/selector](https://www.npmjs.com/package/@gizt/selector)
 - [dot-wild-tiny](https://www.npmjs.com/package/dot-wild-tiny)
+- [jsonpath](https://www.npmjs.com/package/jsonpath)
 - [object-path-wild](https://www.npmjs.com/package/object-path-wild)
 - [qim](https://www.npmjs.com/package/qim)
-- [@gizt/selector](https://www.npmjs.com/package/@gizt/selector)
-- [jsonpath](https://www.npmjs.com/package/jsonpath)
 
 # VERSION
 
