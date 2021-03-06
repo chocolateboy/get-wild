@@ -41,28 +41,25 @@ export const getter = (options: Options = {}): typeof get => {
     // export defined at the bottom of the file rather than this `get`, which
     // may have different options
     function get (obj: any, path: Path, ...rest: [] | [any]): any {
-        let props: ReadonlyArray<PropertyKey>
-
-        switch (typeof path) {
-            case 'string':
-                props = parse(path)
-                break
-
-            case 'number':
-            case 'symbol':
-                props = [path]
-                break
-
-            default:
-                if (__isArray(path)) {
-                    props = path
-                } else {
-                    throw new TypeError('Invalid path: expected a string, array, number, or symbol')
-                }
-        }
-
         const $default = rest.length ? rest[0] : $$default
         const coalesce = <T>(it: T) => it === undefined ? $default : it
+
+        let props: ReadonlyArray<PropertyKey>
+
+        if (__isArray(path)) {
+            props = path
+        } else {
+            const type = path === null ? 'null' : typeof path
+
+            if (type == 'string') {
+                props = parse(path as string)
+            } else if (type == 'number' || type == 'symbol') {
+                props = [path]
+            } else {
+                throw new TypeError(`Invalid path: expected a string, array, number, or symbol, got: ${type}`)
+            }
+        }
+
         const lastIndex = props.length - 1
 
         for (let i = 0; i <= lastIndex; ++i) {
