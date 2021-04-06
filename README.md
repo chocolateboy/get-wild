@@ -347,10 +347,10 @@ A curried version of [`get`](#get) which takes a path and optional default
 value and returns a function which takes an object and an optional default
 value and returns the value(s) located at the path.
 
-Note that, when the generated function is passed to `map`, the arity needs to
-be fixed to avoid misinterpreting `map`'s second argument (the index) as a
-default value. To avoid this, the [`pluck`](#pluck) variant can be used, which
-does this automatically.
+Note that, when the generated function is passed to `flatMap`, the arity needs
+to be fixed to avoid misinterpreting `flatMap`'s second argument (the index) as
+a default value. To avoid this, the [`pluck`](#pluck) variant can be used,
+which does this automatically.
 
 <a name="getter-fp"></a>
 ### getter
@@ -374,9 +374,9 @@ A variant of [`getter`](#getter) which takes an optional [Options](#options)
 object and returns a [curried version of `get`](#get-fp) with the options baked
 in.
 
-Note that, when the generated function is passed to `map`, the arity needs to
-be fixed to avoid misinterpreting `map`'s second argument (the index) as a
-default value. To avoid this, the [`plucker`](#plucker) variant can be used,
+Note that, when the generated function is passed to `flatMap`, the arity needs
+to be fixed to avoid misinterpreting `flatMap`'s second argument (the index) as
+a default value. To avoid this, the [`plucker`](#plucker) variant can be used,
 which does this automatically.
 
 ### pluck
