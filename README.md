@@ -455,7 +455,7 @@ The `collect` function is used to convert a value under a wildcard token into
 an array of values. If not supplied, it defaults to
 [`Object.values`][Object.values], which works with objects, arrays, and other
 non-nullish values. It can be overridden to add support for traversable values
-that aren't plain objects, e.g. ES6 Map and Set instances.
+that aren't plain objects or arrays, e.g. ES6 Map and Set instances.
 
 Note that the value passed to `collect` is not falsey and not an array, as both
 are handled without calling `collect`.
@@ -498,20 +498,17 @@ get(obj, 'foo.**.bar.baz')
 
 The token used to map values at the specified location and flatten the results.
 
-If an empty array is supplied as the third argument to [`get`](#get),
-missing/undefined values are removed from the result.
-
 If set to false, wildcard matching with `flatMap` is disabled and the token is
 treated as a regular property name.
 
 <!-- TOC:ignore -->
 ### Usage
 
-Wildcard matching with `flatMap` behaves in a similar way to basic
-directory/filename matching with [globs][] (minus the pattern matching). The
-selected properties (at the end of the path) are returned as direct children of
-the resulting array (wildcard matches always return an array), either as
-matched results or as default values if there's no match.
+Wildcard matching with `flatMap` behaves in a similar way to directory/filename
+matching with [globs][] (minus the pattern matching). The selected properties
+(at the end of the path) are returned as direct children of the resulting array
+(wildcard matches always return an array), either as matched results or as
+default values if there's no match.
 
 For example, with the default mapping, a path such as
 `accounts.active.*.followers.*.name`, which extracts the names of all followers
@@ -547,7 +544,7 @@ const get = getter({ flatMap: '[]' })
 get(obj, 'foo.[].bar') // SyntaxError: Invalid step @ 3: "foo.[].bar"
 ```
 
-If a custom parser is supplied, any token can be used:
+If a [custom parser](#options-parser) is supplied, any token can be used:
 
 ```javascript
 const get = getter({ flatMap: '[]', split: '.' })
