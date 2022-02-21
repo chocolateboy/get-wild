@@ -241,10 +241,10 @@ can be used to create a custom `get` function with different options.
 ```javascript
 import { getter } from 'get-wild'
 
-const get = getter({ split: '.' })
-const obj = { '': { '': 42 } }
+const get = getter({ split: '/' })
+const obj = { foo: { bar: { baz: 42 } } }
 
-get(obj, '.') // 42
+get(obj, 'foo/bar/baz') // 42
 ```
 
 `getter` is a function which is used to build `get` functions. The default
@@ -310,12 +310,13 @@ e.g. the path:
 is parsed into the following steps:
 
 ```javascript
-["a", -1, "b", 42, "c.d", "e", "f g", "*", "h", 'i "j" k', ""]
+['a', -1, 'b', 42, 'c.d', 'e', 'f g', '*', 'h', 'i "j" k', '']
 ```
 
-Property names are either unquoted (strings), bracketed integers, or bracketed
-single or double-quoted strings. Unquoted names can contain any characters
-apart from spaces (`\s`), `"`, `'`, <code>&#96;</code>, `[`, `]`, `.` or `\`.
+Properties are either unquoted names (strings), bracketed integers, or
+bracketed single or double-quoted strings. Integers can be signed (`-1`, `+42`)
+or unsigned (`42`). Unquoted names can contain any characters apart from spaces
+(`\s`), `"`, `'`, <code>&#96;</code>, `[`, `]`, `.` or `\`.
 
 Unquoted property names must be preceded by a dot unless the name is at the
 start of the path, in which case the dot must be omitted. Bracketed values
@@ -343,11 +344,11 @@ followers(user, '<anon>') // get(user, path, "<anon>")
 const allFollowers = users.flatMap(R.unary(followers))
 ```
 
-A curried version of [`get`](#get) which takes a path and optional default
+A curried version of [`get`](#get) which takes a path and an optional default
 value and returns a function which takes an object and an optional default
 value and returns the value(s) located at the path.
 
-Note that, when the generated function is passed to `flatMap`, the arity needs
+Note that, when the generated function is passed to `flatMap`, its arity needs
 to be fixed to avoid misinterpreting `flatMap`'s second argument (the index) as
 a default value. To avoid this, the [`pluck`](#pluck) variant can be used,
 which does this automatically.
@@ -374,7 +375,7 @@ A variant of [`getter`](#getter) which takes an optional [Options](#options)
 object and returns a [curried version of `get`](#get-fp) with the options baked
 in.
 
-Note that, when the generated function is passed to `flatMap`, the arity needs
+Note that, when the generated function is passed to `flatMap`, its arity needs
 to be fixed to avoid misinterpreting `flatMap`'s second argument (the index) as
 a default value. To avoid this, the [`plucker`](#plucker) variant can be used,
 which does this automatically.
@@ -398,7 +399,7 @@ A variant of the [curried version of `get`](#get-fp) without support for the
 optional default-value override.
 
 This is useful in situations where additional arguments may be misinterpreted
-or forbidden, e.g. when the generated function is passed to `map`.
+or forbidden, e.g. when the generated function is passed to `map` or `flatMap`.
 
 ### plucker
 
@@ -420,7 +421,7 @@ A variant of [`getter`](#getter-fp) which returns a [version of `pluck`](#pluck)
 with the options baked in.
 
 This is useful in situations where additional arguments may be misinterpreted
-or forbidden, e.g. when the generated function is passed to `map`.
+or forbidden, e.g. when the generated function is passed to `map` or `flatMap`.
 
 # OPTIONS
 
