@@ -92,7 +92,7 @@ test('default options', t => {
 })
 
 test('error', t => {
-    for (const path of [{}, escape, /foo/]) {
+    for (const path of [null, undefined, {}, escape, /foo/]) {
         t.throws(
             () => get(NODE, path),
             {
@@ -427,7 +427,7 @@ test('scalar', t => {
 })
 
 test('wildcards', t => {
-    // confirm the example in the README works i.e. the wildcard extracts array
+    // confirm the example in the README works, i.e. the wildcard extracts array
     // values
     t.deepEqual(get(ARRAY, '[1].*.value'), [4, 5, 6])
 

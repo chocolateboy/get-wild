@@ -51,9 +51,9 @@ export const getter = (options: Options = {}): typeof get => {
         } else {
             const type = path === null ? 'null' : typeof path
 
-            if (type == 'string') {
+            if (type === 'string') {
                 props = parse(path as string)
-            } else if (type == 'number' || type == 'symbol') {
+            } else if (type === 'number' || type === 'symbol') {
                 props = [path]
             } else {
                 throw new TypeError(`Invalid path: expected a string, array, number, or symbol, got: ${type}`)
