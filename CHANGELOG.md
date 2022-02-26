@@ -1,3 +1,13 @@
+## 2.0.0 - TBD
+
+### Breaking Changes
+
+#### get-wild/fp
+
+- make `get` behave like `pluck` and `getter` behave like `plucker`, i.e.
+  remove the (optional) default-value override
+- remove `pluck` and `plucker`
+
 ## 1.5.0 - 2021-03-04
 
 - fix coercion of undefined to the default value in trailing wildcards

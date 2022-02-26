@@ -23,8 +23,6 @@
   - [get-wild/fp](#get-wild-fp)
     - [get](#get-fp)
     - [getter](#getter-fp)
-    - [pluck](#pluck)
-    - [plucker](#plucker)
 - [OPTIONS](#options)
   - [collect](#collect)
   - [default](#default)
@@ -330,98 +328,41 @@ If the path is an empty string, an empty array is returned.
 <a name="get-fp"></a>
 ### get
 
-- **Type**: `(path: Path, $default?: any) => (obj: any, $default?: any) => any`
+- **Type**: `(path: Path, $default?: any) => (obj: any) => any`
 
 ```javascript
 import { get } from 'get-wild/fp'
-import R from 'ramda'
 
 const followers = get('followers.*.name', [])
 
-followers(user)           // get(user, path, [])
-followers(user, '<anon>') // get(user, path, "<anon>")
+followers(user) // get(user, 'followers.*.name', [])
 
-const allFollowers = users.flatMap(R.unary(followers))
+const allFollowers = users.flatMap(followers)
 ```
 
 A curried version of [`get`](#get) which takes a path and an optional default
-value and returns a function which takes an object and an optional default
-value and returns the value(s) located at the path.
-
-Note that, when the generated function is passed to `flatMap`, its arity needs
-to be fixed to avoid misinterpreting `flatMap`'s second argument (the index) as
-a default value. To avoid this, the [`pluck`](#pluck) variant can be used,
-which does this automatically.
+value and returns a function which takes an object and returns the value(s)
+located at the path.
 
 <a name="getter-fp"></a>
 ### getter
 
-- **Type**: `(options?: Options) => (path: Path, $default?: any) => (obj: any, $default?: any) => any`
+- **Type**: `(options?: Options) => (path: Path, $default?: any) => (obj: any) => any`
 
 ```javascript
 import { getter } from 'get-wild/fp'
-import R from 'ramda'
 
 const get = getter({ default: [], split: '.' })
 const followers = get('followers.*.name')
 
-followers(user)           // get(user, path, [])
-followers(user, '<anon>') // get(user, path, "<anon>")
+followers(user) // get(user, 'followers.*.name', [])
 
-const allFollowers = users.flatMap(R.unary(followers))
+const allFollowers = users.flatMap(followers)
 ```
 
 A variant of [`getter`](#getter) which takes an optional [Options](#options)
 object and returns a [curried version of `get`](#get-fp) with the options baked
 in.
-
-Note that, when the generated function is passed to `flatMap`, its arity needs
-to be fixed to avoid misinterpreting `flatMap`'s second argument (the index) as
-a default value. To avoid this, the [`plucker`](#plucker) variant can be used,
-which does this automatically.
-
-### pluck
-
-- **Type**: `(path: Path, $default?: any) => (obj: any) => any`
-
-```javascript
-import { pluck } from 'get-wild/fp'
-
-const followers = pluck('followers.*.name', [])
-
-followers(user)           // get(user, path, [])
-followers(user, '<anon>') // get(user, path, [])
-
-const allFollowers = users.flatMap(followers)
-```
-
-A variant of the [curried version of `get`](#get-fp) without support for the
-optional default-value override.
-
-This is useful in situations where additional arguments may be misinterpreted
-or forbidden, e.g. when the generated function is passed to `map` or `flatMap`.
-
-### plucker
-
-- **Type**: `(options?: Options) => (path: Path, $default?: any) => (obj: any) => any`
-
-```javascript
-import { plucker } from 'get-wild/fp'
-
-const pluck = plucker({ default: [], split: '.' })
-const followers = pluck('followers.*.name')
-
-followers(user)           // get(user, path, [])
-followers(user, '<anon>') // get(user, path, [])
-
-const allFollowers = users.flatMap(followers)
-```
-
-A variant of [`getter`](#getter-fp) which returns a [version of `pluck`](#pluck)
-with the options baked in.
-
-This is useful in situations where additional arguments may be misinterpreted
-or forbidden, e.g. when the generated function is passed to `map` or `flatMap`.
 
 # OPTIONS
 
