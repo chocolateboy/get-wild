@@ -1,6 +1,6 @@
 import size       from 'rollup-plugin-filesize'
 import { terser } from 'rollup-plugin-terser'
-import ts         from '@wessberg/rollup-plugin-ts'
+import ts         from 'rollup-plugin-ts'
 
 const isDev = process.env.NODE_ENV !== 'production'
 const external = isDev ? ['source-map-support/register'] : []

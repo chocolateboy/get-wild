@@ -33,7 +33,7 @@ module.exports = [
     "foo'bar",
     'foo`bar',
     'foo bar',
-    'foo  bar',
+    'foo  baz', // [1]
     'foo\nbar',
     'foo\tbar',
     'foo\r\nbar',
@@ -52,3 +52,7 @@ module.exports = [
     'foo["\\"]bar',
     ' foo [1] . bar ',
 ]
+
+// [1] XXX AVA (v4) collapses spaces in test names and treats "foo bar" and "foo
+// bar" (2 spaces) as the same name and complains about the duplicate test name,
+// so give it another (unique) name
