@@ -111,4 +111,4 @@
 
 [EOL]: https://github.com/nodejs/Release#readme
 [pluck]: https://github.com/chocolateboy/get-wild/blob/v1.5.0/README.md#pluck
-[plucker]: https://github.com/chocolateboy/get-wild/blob/v1.5.0/README.md#pluck
+[plucker]: https://github.com/chocolateboy/get-wild/blob/v1.5.0/README.md#plucker
