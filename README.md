@@ -586,7 +586,7 @@ The following NPM scripts are available:
 
 # VERSION
 
-1.5.0
+2.0.0
 
 # AUTHOR
 
@@ -594,7 +594,7 @@ The following NPM scripts are available:
 
 # COPYRIGHT AND LICENSE
 
-Copyright © 2020-2021 by chocolateboy.
+Copyright © 2020-2022 by chocolateboy.
 
 This is free software; you can redistribute it and/or modify it under the terms
 of the [MIT license](https://opensource.org/licenses/MIT).
