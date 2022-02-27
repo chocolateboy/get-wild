@@ -5,10 +5,16 @@
 #### get-wild/fp
 
 - `get` and `getter` no longer support an (optional) default-value override,
-  i.e. they now behave like `pluck` and `plucker`
+  i.e. they now behave like [`pluck`][pluck] and [`plucker`][plucker]
 - remove `pluck` and `plucker`
 
+#### compatibility
+
+- drop support for [EOL Node.js versions][EOL] (i.e. Node.js v10)
+
 ### Changes
+
+#### types
 
 - the return type of `get` can be supplied as a type parameter
 
@@ -102,3 +108,7 @@
 ## 0.0.1 - 2020-09-15
 
 - initial release
+
+[EOL]: https://github.com/nodejs/Release#readme
+[pluck]: https://github.com/chocolateboy/get-wild/blob/v1.5.0/README.md#pluck
+[plucker]: https://github.com/chocolateboy/get-wild/blob/v1.5.0/README.md#pluck

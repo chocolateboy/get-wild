@@ -574,9 +574,7 @@ The following NPM scripts are available:
 
 # COMPATIBILITY
 
-- Environments with support for ES6 and
-  [`Array#flat`][flat]/[`Array#flatMap`][flatMap]
-  ([polyfill][])
+- [Maintained Node.js versions](https://github.com/nodejs/Release#readme) and compatible browsers
 
 # SEE ALSO
 
