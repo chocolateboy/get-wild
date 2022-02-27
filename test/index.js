@@ -7,8 +7,6 @@ const {
     split: defaultSplit
 } = require('..')
 
-require('array-flat-polyfill') // for Node v10
-
 function node (key, value) {
     return { foo: { bar: { [key]: value } } }
 }
