@@ -1,8 +1,8 @@
 import defaultParser from './parser'
 
 export type Options = {
-    collect?: (value: {}) => Array<any>;
-    default?: any;
+    collect?: (value: {}) => Array<unknown>;
+    default?: unknown;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
     parser?: Options['split'];
@@ -12,7 +12,8 @@ export type Options = {
 export type Parser = (path: string) => Array<PropertyKey>;
 export type Path = PropertyKey | Array<PropertyKey>;
 
-type Dict = Record<PropertyKey, any>;
+type Dict = Record<PropertyKey, unknown>;
+type Getter = (options?: Options) => <T = any>(value: unknown, path: Path, $default?: unknown) => T;
 
 // minification helpers
 const { isArray: __isArray } = Array
@@ -21,7 +22,7 @@ const { defineProperty: __defineProperty, values: defaultCollect } = Object
 const NO_MAP = Symbol()
 const NO_FLAT_MAP = Symbol()
 
-export const getter = (options: Options = {}): typeof get => {
+export const getter: Getter = (options: Options = {}) => {
     const {
         collect = defaultCollect,
         default: $$default,
@@ -40,7 +41,7 @@ export const getter = (options: Options = {}): typeof get => {
     // XXX the name is important; if omitted, `get` refers to the default `get`
     // export defined at the bottom of the file rather than this `get`, which
     // may have different options
-    function get (obj: any, path: Path, ...rest: [] | [any]): any {
+    function get (obj: unknown, path: Path, ...rest: unknown[]): any {
         const $default = rest.length ? rest[0] : $$default
         const coalesce = <T>(it: T) => it === undefined ? $default : it
 
@@ -71,24 +72,22 @@ export const getter = (options: Options = {}): typeof get => {
             const isFlatMap = prop === flatMap
 
             if (isFlatMap || prop === map) {
-                const values = __isArray(obj) ? obj : collect(obj)
+                const values = __isArray(obj) ? obj : collect(obj as {})
 
                 let recurse
 
                 if (i === lastIndex) {
                     recurse = coalesce // base case
                 } else {
-                    const newProps = props.slice(i + 1)
-                    recurse = <V>(value: V) => get(value, newProps, $default)
+                    const tailProps = props.slice(i + 1)
+                    recurse = <V>(value: V) => get(value, tailProps, $default)
                 }
 
                 return isFlatMap ? values.flatMap(recurse) : values.map(recurse)
             } else if (Number.isInteger(<number>prop) && __isArray(obj)) {
                 obj = obj[<number>prop < 0 ? obj.length + <number>prop : <number>prop]
             } else {
-                // XXX cast the symbol to a string to work around a TypeScript bug:
-                // https://github.com/microsoft/TypeScript/issues/1863
-                obj = (obj as Dict)[prop as string]
+                obj = (obj as Dict)[prop]
             }
         }
 

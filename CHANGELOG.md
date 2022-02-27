@@ -4,9 +4,13 @@
 
 #### get-wild/fp
 
-- make `get` behave like `pluck` and `getter` behave like `plucker`, i.e.
-  remove the (optional) default-value override
+- `get` and `getter` no longer support an (optional) default-value override,
+  i.e. they now behave like `pluck` and `plucker`
 - remove `pluck` and `plucker`
+
+### Changes
+
+- the return type of `get` can be supplied as a type parameter
 
 ## 1.5.0 - 2021-03-04
 

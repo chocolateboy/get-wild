@@ -197,7 +197,7 @@ type Path = PropertyKey | Array<PropertyKey>;
 
 ### get
 
-- **Type**: `(obj: any, path: Path, $default?: any) => any`
+- **Type**: `<T = any>(obj: any, path: Path, $default?: any) => T`
 
 ```javascript
 import { get } from 'get-wild'
@@ -234,7 +234,7 @@ can be used to create a custom `get` function with different options.
 
 ### getter
 
-- **Type**: `(options?: Options) => (obj: any, path: Path, $default?: any) => any`
+- **Type**: `(options?: Options) => <T = any>(obj: any, path: Path, $default?: any) => T`
 
 ```javascript
 import { getter } from 'get-wild'
@@ -328,7 +328,7 @@ If the path is an empty string, an empty array is returned.
 <a name="get-fp"></a>
 ### get
 
-- **Type**: `(path: Path, $default?: any) => (obj: any) => any`
+- **Type**: `<T = any>(path: Path, $default?: any) => <U = T>(obj: any) => U`
 
 ```javascript
 import { get } from 'get-wild/fp'
@@ -347,7 +347,7 @@ located at the path.
 <a name="getter-fp"></a>
 ### getter
 
-- **Type**: `(options?: Options) => (path: Path, $default?: any) => (obj: any) => any`
+- **Type**: `(options?: Options) => <T = any>(path: Path, $default?: any) => <U = T>(obj: any) => U`
 
 ```javascript
 import { getter } from 'get-wild/fp'
