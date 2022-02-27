@@ -1,3 +1,7 @@
+## 2.0.1 - 2022-02-27
+
+- remove unused dev dependency
+
 ## 2.0.0 - 2022-02-27
 
 ### Breaking Changes
