@@ -1,4 +1,4 @@
-## 3.0.1 - TBC
+## 3.0.1 - 2022-04-28
 
 - documentation fix
 
