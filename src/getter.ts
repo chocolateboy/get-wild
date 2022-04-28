@@ -1,13 +1,18 @@
 import defaultParser from './parser'
 
+export interface Collect {
+    (value: {}): Array<unknown>;
+    (value: {}, index: number): ArrayLike<unknown>;
+}
+
 export type Options = {
-    collect?: (value: {}) => Array<unknown>;
+    collect?: Collect;
     default?: unknown;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
     parser?: Options['split'];
     split?: string | Parser;
-};
+}
 
 export type Parser = (path: string) => Array<PropertyKey>;
 export type Path = PropertyKey | Array<PropertyKey>;
@@ -38,9 +43,20 @@ export const getter: Getter = (options: Options = {}) => {
         ? (path: string) => path.split(split)
         : split
 
-    // XXX the name is important; if omitted, `get` refers to the default `get`
-    // export defined at the bottom of the file rather than this `get`, which
-    // may have different options
+    const toArray: Collect = (obj: {}, ...args: [] | [number]) => {
+        // ignore this warning to avoid adding a redundant check to appease
+        // TypeScript for something which works in JavaScript
+        //
+        //   > A spread argument must either have a tuple type or be passed to a
+        //   > rest parameter.
+        //
+        // @ts-ignore
+        return __isArray(obj) ? obj : collect(obj, ...args)
+    }
+
+    // XXX the name is important; if omitted, the `get` referenced in the body
+    // of this function refers to the default `get` export defined at the bottom
+    // of the file rather than this `get`, which may have different options
     function get (obj: unknown, path: Path, ...rest: unknown[]): any {
         const $default = rest.length ? rest[0] : $$default
         const coalesce = <T>(it: T) => it === undefined ? $default : it
@@ -72,7 +88,7 @@ export const getter: Getter = (options: Options = {}) => {
             const isFlatMap = prop === flatMap
 
             if (isFlatMap || prop === map) {
-                const values = __isArray(obj) ? obj : collect(obj as {})
+                const values = toArray(obj as {})
 
                 let recurse
 
@@ -84,8 +100,13 @@ export const getter: Getter = (options: Options = {}) => {
                 }
 
                 return isFlatMap ? values.flatMap(recurse) : values.map(recurse)
-            } else if (Number.isInteger(<number>prop) && __isArray(obj)) {
-                obj = obj[<number>prop < 0 ? obj.length + <number>prop : <number>prop]
+            } else if (Number.isInteger(prop)) {
+                const values = toArray(obj as {}, <number>prop)
+                const index = <number>prop < 0
+                    ? values.length + <number>prop
+                    : <number>prop
+
+                obj = values[index]
             } else {
                 obj = (obj as Dict)[prop]
             }

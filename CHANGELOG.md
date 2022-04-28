@@ -1,3 +1,19 @@
+## 3.0.0 - TBC
+
+### Breaking Change
+
+- integer properties are now always treated as indices rather than only when
+  the object is an array
+- `collect` is called for indexed access to non-arrays as well as for wildcard
+  matches against them
+
+### Features
+
+- for indexed properties, `collect` is passed the index as a second argument
+  (omitted for wildcard matches)
+- the return value of `collect` can be an array-like for indexed access rather
+  than the full array required for wildcard matches
+
 ## 2.0.1 - 2022-02-27
 
 - remove unused dev dependency

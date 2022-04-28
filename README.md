@@ -48,7 +48,7 @@ get-wild - extract nested properties from an object with support for wildcards
 - support for negative array indices, e.g. `"foo[-1].bar"`
 - pluggable path parser
 - no dependencies
-- ~750 B minified + gzipped
+- &lt; 800 B minified + gzipped
 - curried (data last) versions for functional programming
 - fully typed (TypeScript)
 - CDN builds (UMD) - [jsDelivr][], [unpkg][]
@@ -178,13 +178,18 @@ The following types are referenced in the descriptions below.
 
 ```typescript
 type Options = {
-    collect?: (value: {}) => Array<any>;
+    collect?: Collect;
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
     parser?: Options['split'];
     split?: string | Parser;
 };
+
+interface Collect {
+    (value: {}) => Array<any>;
+    (value: {}, index: number) => ArrayLike<any>;
+}
 
 type Parser = (path: string) => Array<PropertyKey>;
 type Path = PropertyKey | Array<PropertyKey>;
@@ -368,7 +373,9 @@ in.
 
 ## collect
 
-- **Type**: `(value: {}) => Array<any>`
+- **Type**:
+  - `(value: {}) => Array<any>`
+  - `(value: {}, index: number) => ArrayLike<any>`
 - **Default**: `Object.values`
 
 ```javascript
@@ -390,17 +397,25 @@ const map = new Map([
 const obj = { map }
 const get = getter({ collect })
 
-get(obj, 'map.*.value') // ["foo", "bar", "baz", "quux"]
+get(obj, 'map.*.value')   // ["foo", "bar", "baz", "quux"]
+get(obj, 'map[0].value')  // "foo"
+get(obj, 'map[-1].value') // "quux"
 ```
 
-The `collect` function is used to convert a value under a wildcard token into
-an array of values. If not supplied, it defaults to
-[`Object.values`][Object.values], which works with objects, arrays, and other
-non-nullish values. It can be overridden to add support for traversable values
-that aren't plain objects or arrays, e.g. ES6 Map and Set instances.
+The `collect` function is used to convert a non-array value under a wildcard
+token, or indexed by an integer, into an array of values. If not supplied, it
+defaults to [`Object.values`][Object.values], which works with plain objects,
+array-likes, and other non-nullish values. It can be overridden to add support
+for traversable values that aren't plain objects or arrays, e.g. DOM elements
+or ES6 Map and Set instances.
 
 Note that the value passed to `collect` is not falsey and not an array, as both
 are handled without calling `collect`.
+
+For indexed access, the collect function is passed the index as its second
+argument. For wildcard matches, the index is omitted. This distinction can be
+used to customize the result, e.g. to avoid constructing a large array if only
+a single value is accessed, or to customize the order of the values.
 
 ## default
 

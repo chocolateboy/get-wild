@@ -118,13 +118,15 @@ test('export.split', t => {
 })
 
 test('option.collect', t => {
-    // example from the README
-
     const want = ['foo', 'bar', 'baz', 'quux']
 
-    const collect = value => {
+    const collect = (value, ...args) => {
         if (value instanceof Map || value instanceof Set) {
-            return Array.from(value.values())
+            const values = [...value.values()]
+
+            return args.length
+                ? values.sort((a, b) => a.value.localeCompare(b.value))
+                : values
         } else {
             return Object.values(value)
         }
@@ -152,11 +154,31 @@ test('option.collect', t => {
     ])
 
     const object = { obj, map, set }
-    const get = getter({ collect })
+    const get1 = getter({ collect })
 
-    t.deepEqual(get(object, 'obj.*.value'), want)
-    t.deepEqual(get(object, 'map.*.value'), want)
-    t.deepEqual(get(object, 'set.*.value'), want)
+    t.deepEqual(get1(object, 'obj.*.value'), want)
+    t.deepEqual(get1(object, 'map.*.value'), want)
+    t.deepEqual(get1(object, 'set.*.value'), want)
+
+    t.deepEqual(get1(object, 'obj[0].value'), 'foo')
+    t.deepEqual(get1(object, 'obj[-1].value'), 'quux')
+    t.deepEqual(get1(object, 'map[0].value'), 'bar')
+    t.deepEqual(get1(object, 'map[-1].value'), 'quux')
+    t.deepEqual(get1(object, 'set[0].value'), 'bar')
+    t.deepEqual(get1(object, 'set[-1].value'), 'quux')
+
+    // example from the changelog
+    const obj2 = {
+        1: { '-1': 'foo' },
+        2: { '-2': 'bar' },
+    }
+
+    t.deepEqual(get(obj2, '[0]'), { '-1': 'foo' })
+    t.deepEqual(get(obj2, '[-1]'), { '-2': 'bar' })
+    t.deepEqual(get(obj2, '[1][-1]'), 'bar')
+    t.deepEqual(get(obj2, '[2][-2]'), undefined)
+    t.deepEqual(get(obj2, '1.-1'), 'foo')
+    t.deepEqual(get(obj2, '["2"]["-2"]'), 'bar')
 })
 
 test('option.default', t => {
