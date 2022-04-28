@@ -114,7 +114,7 @@ get(data, 'users.*.homepage')
 // ["https://example.com/john-doe", "https://example.com/jane-doe", undefined]
 
 // also works with arrays
-get(array, '1.*.value')    // [4, 5, 6]
+get(array, '[1].*.value')  // [4, 5, 6]
 get(array, '[-1].*.value') // [7, 8, 9]
 ```
 

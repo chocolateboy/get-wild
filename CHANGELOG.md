@@ -1,3 +1,7 @@
+## 3.0.1 - TBC
+
+- documentation fix
+
 ## 3.0.0 - 2022-04-28
 
 ### Breaking Change
