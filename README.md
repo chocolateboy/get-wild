@@ -103,12 +103,13 @@ const data = {
         'ghi567': {
             name: 'Nemo',
             hobbies: ['singing', 'dancing'],
-        }
+        },
     }
 }
 
-get(data, 'users.*.name')
-// ["John Doe", "Jane Doe", "Nemo"]
+get(data, 'users[0].name')  // "John Doe"
+get(data, 'users[-1].name') // "Nemo"
+get(data, 'users.*.name')   // ["John Doe", "Jane Doe", "Nemo"]
 
 get(data, 'users.*.homepage')
 // ["https://example.com/john-doe", "https://example.com/jane-doe", undefined]
@@ -182,9 +183,9 @@ type Options = {
     default?: any;
     flatMap?: PropertyKey | false;
     map?: PropertyKey | false;
-    parser?: Options['split'];
-    split?: string | Parser;
-};
+    parser?: string | Parser;
+    split?: Options['parser'];
+}
 
 interface Collect {
     (value: {}) => Array<any>;
@@ -296,8 +297,8 @@ into an array of steps (strings, symbols or numbers).
 
 The array is not mutated, so, e.g., the function can be memoized to avoid
 re-parsing long/frequently-used paths. Alternatively, the path can be
-pre-parsed into an array (this is done automatically if the curried versions
-are used).
+pre-parsed into an array (this is done automatically if the
+[curried versions](#get-wild-fp) are used).
 
 <a name="path-syntax"></a>
 <!-- TOC:ignore -->
@@ -307,13 +308,13 @@ The parser supports an extended version of JavaScript's native path syntax,
 e.g. the path:
 
 ```javascript
-`a[-1].b[42]["c.d"].e['f g'].*.h["i \\"j\\" k"][""]`
+`a[-1].b[42].-1.42["c.d"].e['f g'].*.h["i \\"j\\" k"]['']`
 ```
 
 is parsed into the following steps:
 
 ```javascript
-['a', -1, 'b', 42, 'c.d', 'e', 'f g', '*', 'h', 'i "j" k', '']
+['a', -1, 'b', 42, '-1', '42', 'c.d', 'e', 'f g', '*', 'h', 'i "j" k', '']
 ```
 
 Properties are either unquoted names (strings), bracketed integers, or
@@ -340,7 +341,7 @@ import { get } from 'get-wild/fp'
 
 const followers = get('followers.*.name', [])
 
-followers(user) // get(user, 'followers.*.name', [])
+followers(user) // get(user, ["followers", "*", "name"], [])
 
 const allFollowers = users.flatMap(followers)
 ```
@@ -360,7 +361,7 @@ import { getter } from 'get-wild/fp'
 const get = getter({ default: [], split: '.' })
 const followers = get('followers.*.name')
 
-followers(user) // get(user, 'followers.*.name', [])
+followers(user) // get(user, ["followers", "*", "name"], [])
 
 const allFollowers = users.flatMap(followers)
 ```
@@ -397,25 +398,27 @@ const map = new Map([
 const obj = { map }
 const get = getter({ collect })
 
-get(obj, 'map.*.value')   // ["foo", "bar", "baz", "quux"]
 get(obj, 'map[0].value')  // "foo"
 get(obj, 'map[-1].value') // "quux"
+get(obj, 'map.*.value')   // ["foo", "bar", "baz", "quux"]
 ```
 
-The `collect` function is used to convert a non-array value under a wildcard
-token, or indexed by an integer, into an array of values. If not supplied, it
+The `collect` function is used to convert a non-array value matched by a
+wildcard or indexed by an integer into an array of values. If not supplied, it
 defaults to [`Object.values`][Object.values], which works with plain objects,
 array-likes, and other non-nullish values. It can be overridden to add support
-for traversable values that aren't plain objects or arrays, e.g. DOM elements
+for traversable values which aren't plain objects or arrays, e.g. DOM elements
 or ES6 Map and Set instances.
 
 Note that the value passed to `collect` is not falsey and not an array, as both
 are handled without calling `collect`.
 
-For indexed access, the collect function is passed the index as its second
-argument. For wildcard matches, the index is omitted. This distinction can be
-used to customize the result, e.g. to avoid constructing a large array if only
-a single value is accessed, or to customize the order of the values.
+For indexed access, the `collect` function is passed the index as its second
+argument and the return value can be an array-like rather than a full-blown
+array. For wildcard matches, the index is omitted and the return value is an
+an array. This distinction can be used to customize the result, e.g. to avoid
+constructing a large array if only a single value is accessed, or to customize
+the order of the values.
 
 ## default
 
@@ -450,7 +453,11 @@ import { getter } from 'get-wild'
 
 const get = getter({ flatMap: '**', map: '*' })
 
-get(obj, 'foo.**.bar.baz')
+get(data, 'users.**.hobbies', [])
+// ["eating", "sleeping", "singing", "dancing"]
+
+get(data, 'users.*.hobbies', [])
+// [["eating", "sleeping"], [], ["singing", "dancing"]]
 ```
 
 The token used to map values at the specified location and flatten the results.
@@ -519,7 +526,11 @@ import { getter } from 'get-wild'
 
 const get = getter({ map: '*', flatMap: '**' })
 
-get(obj, 'foo.*.bar.baz')
+get(data, 'users.*.hobbies', [])
+// [["eating", "sleeping"], [], ["singing", "dancing"]]
+
+get(data, 'users.**.hobbies', [])
+// ["eating", "sleeping", "singing", "dancing"]
 ```
 
 The token used to map values at the specified location without flattening the
