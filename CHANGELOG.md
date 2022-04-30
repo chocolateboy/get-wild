@@ -1,4 +1,4 @@
-## 3.0.2 - TBC
+## 3.0.2 - 2022-04-30
 
 - types: add missing `Collect` export
 
