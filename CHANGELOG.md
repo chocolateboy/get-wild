@@ -1,3 +1,7 @@
+## 3.0.2 - TBC
+
+- types: add missing `Collect` export
+
 ## 3.0.1 - 2022-04-28
 
 - documentation fix

@@ -1,4 +1,5 @@
 export {
+    Collect,
     Options,
     Parser,
     Path,
