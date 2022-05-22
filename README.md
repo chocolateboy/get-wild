@@ -413,12 +413,12 @@ or ES6 Map and Set instances.
 Note that the value passed to `collect` is not falsey and not an array, as both
 are handled without calling `collect`.
 
-For indexed access, the `collect` function is passed the index as its second
-argument and the return value can be an array-like rather than a full-blown
-array. For wildcard matches, the index is omitted and the return value is an
-an array. This distinction can be used to customize the result, e.g. to avoid
-constructing a large array if only a single value is accessed, or to customize
-the order of the values.
+For indexed access, the `collect` function is passed the index (which may be
+negative) as its second argument and the return value can be an array-like
+rather than a full-blown array. For wildcard matches, the index is omitted and
+the return value must be an array. This distinction can be used to customize
+the result, e.g. to avoid constructing a large array if only a single value is
+accessed.
 
 ## default
 
@@ -436,7 +436,6 @@ get(data, 'users.*.hobbies', [])
 
 get(data, 'users.*.hobbies', undefined)
 // ["eating", "sleeping", undefined, "singing", "dancing"]
-
 ```
 
 This option allows the default value to be baked into a `get` function. If no
@@ -609,6 +608,7 @@ The following NPM scripts are available:
 - [jsonpath](https://www.npmjs.com/package/jsonpath)
 - [object-path-wild](https://www.npmjs.com/package/object-path-wild)
 - [qim](https://www.npmjs.com/package/qim)
+- [wild-wild-path](https://www.npmjs.com/package/wild-wild-path)
 
 # VERSION
 
