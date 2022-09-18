@@ -8,7 +8,7 @@
 
 ## 3.0.0 - 2022-04-28
 
-### Breaking Change
+### Breaking Changes
 
 - integer properties are now always treated as indices rather than only when
   the object is an array

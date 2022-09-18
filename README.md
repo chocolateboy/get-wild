@@ -459,7 +459,7 @@ get(data, 'users.*.hobbies', [])
 // [["eating", "sleeping"], [], ["singing", "dancing"]]
 ```
 
-The token used to map values at the specified location and flatten the results.
+The token used to match values at the specified location and flatten the results.
 
 If set to false, wildcard matching with `flatMap` is disabled and the token is
 treated as a regular property name.
@@ -532,7 +532,7 @@ get(data, 'users.**.hobbies', [])
 // ["eating", "sleeping", "singing", "dancing"]
 ```
 
-The token used to map values at the specified location without flattening the
+The token used to match values at the specified location without flattening the
 results.
 
 Matching with `map` selects the same values as `flatMap`, but they remain

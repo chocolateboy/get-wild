@@ -167,7 +167,7 @@ test('option.collect', t => {
     t.deepEqual(get1(object, 'set[0].value'), 'bar')
     t.deepEqual(get1(object, 'set[-1].value'), 'quux')
 
-    // example from the changelog
+    // example from the release notes
     const obj2 = {
         1: { '-1': 'foo' },
         2: { '-2': 'bar' },
