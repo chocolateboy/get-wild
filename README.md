@@ -323,7 +323,7 @@ or unsigned (`42`). Unquoted names can contain any characters apart from spaces
 (`\s`), `"`, `'`, <code>&#96;</code>, `[`, `]`, `.` or `\`.
 
 Unquoted property names must be preceded by a dot unless the name is at the
-start of the path, in which case the dot must be omitted. Bracketed values
+start of the path, in which case the dot must be omitted. Bracketed properties
 must not be preceded by a dot.
 
 If the path is an empty string, an empty array is returned.
